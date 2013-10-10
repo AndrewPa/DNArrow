@@ -2,13 +2,14 @@ window.onload = function getElements()
 {
 	window.supbox = document.getElementById("sup_coordslist");
 	window.neubox = document.getElementById("neu_coordslist");
-	window.elim_textbox = document.getElementById("eliminate_results");
-	window.narrow_textbox = document.getElementById("narrow_results");
-	window.all_boxes = [supbox, neubox, elim_textbox, narrow_textbox, collapse_textbox];
+	window.collapse_textbox = document.getElementById("collapse_textbox");
+	window.remaining_textbox = document.getElementById("remaining_textbox");
+	window.elim_textbox = 0; //spacekeeper: will be fixed when converted to objects
+	window.all_boxes = [supbox, neubox, elim_textbox, collapse_textbox, remaining_textbox]; //TO DO: convert to objects
 	window.armselect = document.getElementById('chrom_arm');
 
     return true;
-}
+};
 
 //The order of solution arrays and their corresponding display elements is critical for correct display;
 //this is because the same index is called in order to bind the correct display to the correct array
@@ -19,13 +20,15 @@ var neu2L = [], neu2R = [], neu3L = [], neu3R = [];
 var elim2L = [], elim2R = [], elim3L = [], elim3R = [];
 var narrow2L = [], narrow2R = [], narrow3L = [], narrow3R = [];
 var col2L = [], col2R = [], col3L = [], col3R = [];
+var rem2L = [], rem2R = [], rem3L = [], rem3R = [];   
 var all_arms = ["2L", "2R", "3L", "3R"];
 var sup_arrays = [sup2L, sup2R, sup3L, sup3R];
 var neu_arrays = [neu2L, neu2R, neu3L, neu3R];
 var elim_arrays = [elim2L, elim2R, elim3L, elim3R];
 var narrow_arrays = [narrow2L, narrow2R, narrow3L, narrow3R];
 var collapse_arrays = [col2L, col2R, col3L, col3R];
-var array_types = [sup_arrays, neu_arrays, elim_arrays, narrow_arrays, collapse_arrays];
+var remaining_arrays = [rem2L, rem2R, rem3L, rem3R];
+var array_types = [sup_arrays, neu_arrays, elim_arrays, collapse_arrays, remaining_arrays];
 var armselect = document.getElementById('chrom_arm');
 var format_alert = "\n\n" + "Format: [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2] " + 
 "\n\n" + "e.g.: 100;200 200;300 300;400 etc."

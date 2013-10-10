@@ -8,8 +8,8 @@
 		<link rel="stylesheet" type="text/css" href="dnarrow-layout.css" media="screen" />
 		<script type="text/javascript" src="input_handling.js"></script>
 		<script type="text/javascript" src="eliminate_overlaps.js"></script>
-		<script type="text/javascript" src="dnarrow_hotspots2.js"></script>
 		<script type="text/javascript" src="dnarrow_collapse.js"></script>
+		<script type="text/javascript" src="dnarrow_remaining.js"></script>
 
     </head>
     <body>
@@ -58,10 +58,16 @@
 						<button class="clear" type="submit" onClick="clearListbox(neubox,neu_arrays);">Clear All</button>
 					</div>
 	            </div>
+				<div class="data-group-remaining">
+					<div class="button-data-single">
+						<textarea id="remaining_textbox"></textarea></br>
+						<button class="single" type="submit" onClick="computeRemaining();">Remaining</button>
+					</div>
+				</div>
 				<div class="data-group-collapse">
-		        	<div class="button-data-collapse">
+		        	<div class="button-data-single">
 		        		<textarea id="collapse_textbox"></textarea></br>
-		        		<button class="collapse" type="submit" onClick="eliminateOverlaps(); collapseCoords();">Collapse</button>
+		        		<button class="single" type="submit" onClick="eliminateOverlaps(); collapseCoords();">Collapse</button>
 		            </div>
 				</div>
 			</div>
