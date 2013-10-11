@@ -1,17 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>DNArrow 2.0b (c) Andrew Papadopoli 2013</title>
-
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>DNArrow 2.0b (c) Andrew Papadopoli 2013</title>
 		<link rel="stylesheet" type="text/css" href="dnarrow-layout.css" media="screen" />
 		<script type="text/javascript" src="input_handling.js"></script>
-		<script type="text/javascript" src="eliminate_overlaps.js"></script>
-		<script type="text/javascript" src="dnarrow_collapse.js"></script>
-		<script type="text/javascript" src="dnarrow_remaining.js"></script>
-
-    </head>
+		<script type="text/javascript" src="all_algorithms.js"></script>
+		<script type="text/javascript" src="algorithm_class.js"></script>
+	</head>
     <body>
 		<div class="foreground">
 			<div class="topbar">
@@ -61,13 +58,13 @@
 				<div class="data-group-remaining">
 					<div class="button-data-single">
 						<textarea id="remaining_textbox"></textarea></br>
-						<button class="single" type="submit" onClick="computeRemaining();">Remaining</button>
+						<button class="single" type="submit" onClick="newremaining.algorithm();">Remaining</button>
 					</div>
 				</div>
 				<div class="data-group-collapse">
 		        	<div class="button-data-single">
 		        		<textarea id="collapse_textbox"></textarea></br>
-		        		<button class="single" type="submit" onClick="eliminateOverlaps(); collapseCoords();">Collapse</button>
+		        		<button class="single" type="submit" onClick="newcollapse.algorithm();">Collapse</button>
 		            </div>
 				</div>
 			</div>

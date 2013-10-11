@@ -31,7 +31,7 @@ var remaining_arrays = [rem2L, rem2R, rem3L, rem3R];
 var array_types = [sup_arrays, neu_arrays, elim_arrays, collapse_arrays, remaining_arrays];
 var armselect = document.getElementById('chrom_arm');
 var format_alert = "\n\n" + "Format: [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2] " + 
-"\n\n" + "e.g.: 100;200 200;300 300;400 etc."
+				   "\n\n" + "e.g.: 100;200 200;300 300;400 etc.";
 
 //The order of chromosome arms and associated arrays is critical for proper entry;
 //for the purpose of this script I use the convention: 2L, 2R, 3L, 3R from L->R
