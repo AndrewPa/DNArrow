@@ -1,10 +1,8 @@
-html
-{
+html {
 	margin: 0;
 	padding: 0;
 }
-body
-{
+body {
 	position: absolute;
 	left: 0px;
 	top: 0px;
@@ -13,18 +11,15 @@ body
 	width: 99%;
 	height: 150%;
 }
-p
-{ 
+p {
 	margin-top: 0; 
 	text-align: justify;
 }
-.foreground
-{
+.foreground {
 	background-color: #B7A5DF;
 	height:85%;
 }
-.topbar
-{
+.topbar {
 	position: absolute;
 	top: 0%;
 	left: 0%;
@@ -32,54 +27,43 @@ p
 	height: 10%;
 	text-align: center;
 	background-color: #9685BA;
+	min-height: 120px;
 }
-.initial-options
-{
+.initial-options {
 	position: absolute;
 	top: 11%;
 	width: 100%;
 	height: 10%;
 	background-color: #9685BA;
 }
-.appspace
-{
+.appspace {
 	position: absolute;
 	top: 22%;
 	width: 100%;
 	height: 70%;
 }
-.data-group-inputs
-{
+.data-group {
 	background-color: #9685BA;
 	height: 40%;
+	width: 22%;
+	position: relative;
+	border-style: solid;
+	border-width: 1px;
+	min-width: 300px;
+	float: left;
+}
+.data-group-inputs {
 	width: 45%;
-	position: absolute;
-	left: 1%;
-	top: 2%;
-	border-style: solid;
-	border-width: 1px;
+	min-width: 600px;
+	margin-right: 10px;
+	margin-top: 10px
 }
-.data-group-remaining
-{
-	background-color: #9685BA;
-	height: 40%;
-	width: 22%;
-	position: absolute;
-	left: 48%;
-	top: 2%;
-	border-style: solid;
-	border-width: 1px;
+.data-group-remaining {
+	margin-top: 10px;
 }
-.data-group-collapse
-{
-	background-color: #9685BA;
-	height: 40%;
-	width: 22%;
-	position: absolute;
-	left: 1%;
-	top: 46%;
-	border-style: solid;
-	border-width: 1px;
+.data-group-collapse {
+	clear: both;
+	margin-top: 10px;
 }
 .button-data-inputs-sup
 {

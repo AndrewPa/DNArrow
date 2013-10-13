@@ -39,9 +39,9 @@
 					<input id="neu_input" type="text" placeholder="e.g.: 100;200 200;300 etc." 
 					onkeypress="if(event.keyCode==13)(submitCoordinate('neu_input',neubox,neu_arrays));">
 				</p>
-            </div>
-            <div class="appspace">
-				<div class="data-group-inputs">
+			</div>
+			<div class="appspace">
+				<div class="data-group data-group-inputs">
 					<div class="button-data-inputs-sup">
 						<button class="add" type="submit" onClick="submitCoordinate('sup_input',supbox,sup_arrays);">Add</button>
 						<button class="delete" type="delete_sup" onClick="deleteCoordinate(supbox,sup_arrays);">Delete</button>
@@ -54,44 +54,34 @@
 						<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(neubox,neu_arrays));"></select>
 						<button class="clear" type="submit" onClick="clearListbox(neubox,neu_arrays);">Clear All</button>
 					</div>
-	            </div>
-				<div class="data-group-remaining">
+				</div>
+				<div class="data-group data-group-remaining">
 					<div class="button-data-single">
 						<textarea id="remaining_textbox"></textarea></br>
 						<button class="single" type="submit" onClick="newremaining.algorithm();">Remaining</button>
 					</div>
 				</div>
-				<div class="data-group-collapse">
-		        	<div class="button-data-single">
-		        		<textarea id="collapse_textbox"></textarea></br>
-		        		<button class="single" type="submit" onClick="newcollapse.algorithm();">Collapse</button>
-		            </div>
+				<div class="data-group data-group-collapse">
+					<div class="button-data-single">
+						<textarea id="collapse_textbox"></textarea></br>
+						<button class="single" type="submit" onClick="newcollapse.algorithm();">Collapse</button>
+					</div>
 				</div>
 			</div>
 		</div>
-        
-        <h2><a id="instructions">Detailed Instructions</a></h2>
-        
-        <p>Enter the active/inactive region coordinates into their respective input forms.
-           These can be typed in manually one at a time, or many at once, with each
-           region separated by a single space.</p>
-
-        <p>These can also be added by copying (sorted) columns from an excel file and 
-           pasting the results into their respective input boxes.</p>
-           
-        <p>In either case, the format should be as follows:</p>
-        
-        <p>[CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2]</p> 
-        
-        <p>e.g.: 100;200 200;300 300;400 etc.</p>
-        
-        <p>Please ensure that left and right bounds are separated by a semicolon (;)
-           and that only <em>spaces</em> separate each region.</p>
-           
-        <p>When ready to submit, press "enter" or click on the appropriate "add" button.</p>
-           
-        <p>You may delete any coordinate from either of the two input boxes by selecting
-           them and pressing the "delete" key on your keyboard.</p>
-        
-    </body>
+		<h2><a id="instructions">Detailed Instructions</a></h2>
+		<p> Enter the active/inactive region coordinates into their respective input forms.
+			These can be typed in manually one at a time, or many at once, with each
+			region separated by a single space.</p>
+		<p> These can also be added by copying (sorted) columns from an excel file and 
+			pasting the results into their respective input boxes.</p>
+		<p> In either case, the format should be as follows:</p>
+		<p> [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2]</p> 
+		<p> e.g.: 100;200 200;300 300;400 etc.</p>
+		<p> Please ensure that left and right bounds are separated by a semicolon (;)
+			and that only <em>spaces</em> separate each region.</p>
+		<p> When ready to submit, press "enter" or click on the appropriate "add" button.</p>
+		<p> You may delete any coordinate from either of the two input boxes by selecting
+			them and pressing the "delete" key on your keyboard.</p>
+	</body>
 </html>

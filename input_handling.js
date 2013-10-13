@@ -13,93 +13,32 @@ window.onload = function getElements()
 
 //The order of solution arrays and their corresponding display elements is critical for correct display;
 //this is because the same index is called in order to bind the correct display to the correct array
-
 var coordarray = [];
-var sup2L = [], sup2R = [], sup3L = [], sup3R = [];
-var neu2L = [], neu2R = [], neu3L = [], neu3R = [];
-var elim2L = [], elim2R = [], elim3L = [], elim3R = [];
-var narrow2L = [], narrow2R = [], narrow3L = [], narrow3R = [];
-var col2L = [], col2R = [], col3L = [], col3R = [];
-var rem2L = [], rem2R = [], rem3L = [], rem3R = [];   
 var all_arms = ["2L", "2R", "3L", "3R"];
-var sup_arrays = [sup2L, sup2R, sup3L, sup3R];
-var neu_arrays = [neu2L, neu2R, neu3L, neu3R];
-var elim_arrays = [elim2L, elim2R, elim3L, elim3R];
-var narrow_arrays = [narrow2L, narrow2R, narrow3L, narrow3R];
-var collapse_arrays = [col2L, col2R, col3L, col3R];
-var remaining_arrays = [rem2L, rem2R, rem3L, rem3R];
+var sup_arrays = [[], [], [], []];
+var neu_arrays = [[], [], [], []];
+var elim_arrays = [[], [], [], []];
+var narrow_arrays = [[], [], [], []];
+var collapse_arrays = [[], [], [], []];
+var remaining_arrays = [[], [], [], []];
 var array_types = [sup_arrays, neu_arrays, elim_arrays, collapse_arrays, remaining_arrays];
 var armselect = document.getElementById('chrom_arm');
 var format_alert = "\n\n" + "Format: [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2] " + 
 				   "\n\n" + "e.g.: 100;200 200;300 300;400 etc.";
-
 //The order of chromosome arms and associated arrays is critical for proper entry;
 //for the purpose of this script I use the convention: 2L, 2R, 3L, 3R from L->R
-
-function fullSort(a)
-{	
-    a.sort(function(a, b)
-	{
-		if(a.split(";")[0] - b.split(";")[0] !== 0) 
-	    { 
-	    	return a.split(";")[0] - b.split(";")[0]; 
-        }
-        else
-        {
-        	return a.split(";")[1] - b.split(";")[1]; 
-        }
-    });
-    
-    return a;
-    
+function fullSort(a) {	//modified sort function sorts numerically (ascending) by first endpoint then second endpoint
+	a.sort(function(a, b) {
+		if(a.split(";")[0] - b.split(";")[0] !== 0) { 
+			return a.split(";")[0] - b.split(";")[0]; 
+		} else {
+			return a.split(";")[1] - b.split(";")[1]; 
+		}
+	});
+	return a;
 }
 
-function removeDuplicates(target_array)
-{
-    target_array.sort();
-    var i = 1;
-	
-    while(i < target_array.length)
-    {	
-	    if(target_array[i] == target_array[i+1])
-	    {	
-		    target_array[i] = undefined;
-            target_array.sort();
-            target_array.pop();
-
-            i = 0;
-	    }
-	    else
-	    {
-		    i += 1;
-	    }
-    }
-    
-    return true;
-    
-}
-
-function removeSpaces(s)
-{
-    for(var i = 0; i < s.length; i++)
-    {
-        if(s[i] !== " ")
-        {
-    	    s = s.slice(i,s.length);
-    	    break;
-        }
-    }
-    for(var i = s.length-1; i >= 0; i--)
-    {
-	    if(s[i] !== " ")
-	    {
-        return s.slice(0,i+1);
-	    }
-    }
-}
-
-function verifyFormat(targ)
-{
+function verifyFormat(targ) {
     if(targ.match(/(^[1-9]\d+|^[0-9]);([1-9]\d+$|[1-9]$)/))
     {
     	return 1; //case 1: entry is in the correct format and is processed normally
@@ -226,7 +165,7 @@ function submitCoordinate(input_choice,form_choice,arrays_type)
 
     var working_array = arrays_type[armselect.selectedIndex]; //array associated with the selected arm
     
-    window.coord_parsed = removeSpaces(coordform.value).split(" ");
+    window.coord_parsed = coordform.value.trim().split(" ");
     coord_parsed = coord_parsed.filter(function(element) { if(element !== "") { return true; }});
     fullSort(coord_parsed);
 
