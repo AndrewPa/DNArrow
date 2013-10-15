@@ -9,79 +9,81 @@
 		<script type="text/javascript" src="all_algorithms.js"></script>
 		<script type="text/javascript" src="algorithm_class.js"></script>
 	</head>
-    <body>
-		<div class="foreground">
-			<div class="topbar">
-        		<p>
-        			<h2>Welcome to DNArrow 2.0b</h2>
-        			<h5>(c) Andrew Papadopoli 2013</h5>
+   	<body>
+		<div class="topbar">
+    		<p>
+    			<h2>Welcome to DNArrow 2.0b</h2>
+    			<h5>(c) Andrew Papadopoli 2013</h5>
 
-        			Please enter your coordinates. Detailed instructions are <a href="#instructions">below</a>.
-        		</p>
-			</div>
-        	<div class="initial-options">
-				<p>
-					Select Chromosome Arm:
-                	<select id="chrom_arm" onChange="buildListbox();">
-                		<option value="2L">2L</option>
-                		<option value="2R">2R</option>
-                		<option value="3L">3L</option>
-                		<option value="3R">3R</option>
-                	</select>
-                </p>
-				<p>
-					Active Region Coordinates:
-					<input id="sup_input" type="text" placeholder="e.g.: 100;200 200;300 etc." 
+    			Please enter your coordinates. Detailed instructions are <a href="#instructions">below</a>.
+    		</p>
+			<p>
+				Select Chromosome Arm:
+            	<select id="chrom_arm" onChange="buildListbox();">
+            		<option value="2L">2L</option>
+            		<option value="2R">2R</option>
+            		<option value="3L">3L</option>
+            		<option value="3R">3R</option>
+            	</select>
+            </p>
+		</div>
+		<div class="appspace">
+			<div class="data-group">
+				<div class="button-data">
+					<div class="title-bar">
+						Active Regions
+						<button class="single clear" type="submit" onClick="clearListbox(supbox,sup_arrays);">X</button>
+					</div>
+					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(supbox,sup_arrays));"></select>
+					<input id="sup_input" type="text" placeholder="e.g.: 100;200 200;300" 
 					onkeypress="if(event.keyCode==13)(submitCoordinate('sup_input',supbox,sup_arrays));">
-				</p>
-				<p>
-					Inactive Region Coordinates:
-					<input id="neu_input" type="text" placeholder="e.g.: 100;200 200;300 etc." 
-					onkeypress="if(event.keyCode==13)(submitCoordinate('neu_input',neubox,neu_arrays));">
-				</p>
+					<!--Design Consideration: Keep or remove input list buttons-->
+					<!--<button class="single add" type="submit" onClick="submitCoordinate('sup_input',supbox,sup_arrays);">Add</button>
+					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(supbox,sup_arrays);">Delete</button>-->
+				</div>
 			</div>
-			<div class="appspace">
-				<div class="data-group data-group-inputs">
-					<div class="button-data-inputs-sup">
-						<button class="add" type="submit" onClick="submitCoordinate('sup_input',supbox,sup_arrays);">Add</button>
-						<button class="delete" type="delete_sup" onClick="deleteCoordinate(supbox,sup_arrays);">Delete</button>
-						<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(supbox,sup_arrays));"></select>
-						<button class="clear" type="submit" onClick="clearListbox(supbox,sup_arrays);">Clear All</button>
+			<div class="data-group">
+				<div class="button-data">
+					<div class="title-bar">
+						Inactive Regions
+						<button class="single clear" type="submit" onClick="clearListbox(neubox,neu_arrays);">X</button>
 					</div>
-					<div class="button-data-inputs-neu">
-						<button class="add" type="submit" onClick="submitCoordinate('neu_input',neubox,neu_arrays);">Add</button>
-						<button class="delete" type="delete_sup" onClick="deleteCoordinate(neubox,neu_arrays);">Delete</button>
-						<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(neubox,neu_arrays));"></select>
-						<button class="clear" type="submit" onClick="clearListbox(neubox,neu_arrays);">Clear All</button>
-					</div>
+					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(neubox,neu_arrays));"></select>
+					<input id="neu_input" type="text" placeholder="e.g.: 100;200 200;300" 
+					onkeypress="if(event.keyCode==13)(submitCoordinate('neu_input',neubox,neu_arrays));">
+					<!--Design Consideration: Keep or remove input list buttons-->
+					<!--<button class="single add" type="submit" onClick="submitCoordinate('neu_input',neubox,neu_arrays);">Add</button>
+					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(neubox,neu_arrays);">Delete</button>-->
 				</div>
-				<div class="data-group data-group-remaining">
-					<div class="button-data-single">
-						<textarea id="remaining_textbox"></textarea></br>
-						<button class="single" type="submit" onClick="newremaining.algorithm();">Remaining</button>
-					</div>
+			</div>
+			<div class="data-group data-group-remaining">
+				<div class="button-data">
+					<textarea id="remaining_textbox"></textarea>
+					<button class="single" type="submit" onClick="newremaining.algorithm();">Remaining</button>
 				</div>
-				<div class="data-group data-group-collapse">
-					<div class="button-data-single">
-						<textarea id="collapse_textbox"></textarea></br>
-						<button class="single" type="submit" onClick="newcollapse.algorithm();">Collapse</button>
-					</div>
+			</div>
+			<div class="data-group data-group-collapse">
+				<div class="button-data button-data-single">
+					<textarea id="collapse_textbox"></textarea>
+					<button class="single" type="submit" onClick="newcollapse.algorithm();">Collapse</button>
 				</div>
 			</div>
 		</div>
-		<h2><a id="instructions">Detailed Instructions</a></h2>
-		<p> Enter the active/inactive region coordinates into their respective input forms.
-			These can be typed in manually one at a time, or many at once, with each
-			region separated by a single space.</p>
-		<p> These can also be added by copying (sorted) columns from an excel file and 
-			pasting the results into their respective input boxes.</p>
-		<p> In either case, the format should be as follows:</p>
-		<p> [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2]</p> 
-		<p> e.g.: 100;200 200;300 300;400 etc.</p>
-		<p> Please ensure that left and right bounds are separated by a semicolon (;)
-			and that only <em>spaces</em> separate each region.</p>
-		<p> When ready to submit, press "enter" or click on the appropriate "add" button.</p>
-		<p> You may delete any coordinate from either of the two input boxes by selecting
-			them and pressing the "delete" key on your keyboard.</p>
+		<div class="instruction-text">
+			<h2><a id="instructions">Detailed Instructions</a></h2>
+			<p> Enter the active/inactive region coordinates into their respective input forms.
+				These can be typed in manually one at a time, or many at once, with each
+				region separated by a single space.</p>
+			<p> These can also be added by copying (sorted) columns from an excel file and 
+				pasting the results into their respective input boxes.</p>
+			<p> In either case, the format should be as follows:</p>
+			<p> [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2]</p> 
+			<p> e.g.: 100;200 200;300 300;400 etc.</p>
+			<p> Please ensure that left and right bounds are separated by a semicolon (;)
+				and that only <em>spaces</em> separate each region.</p>
+			<p> When ready to submit, press "enter" on your keyboard.</p>
+			<p> You may delete any singlecoordinate from either of the two input boxes by 
+				selecting them and pressing the "delete" key on your keyboard.</p>
+		</div>
 	</body>
 </html>

@@ -1,151 +1,122 @@
+/* 
+ * Design Conventions:
+ * A) Because this is a text-based web app,
+ *    i.e. the input and the output are both 
+ *    text, all minimum sizes will be in em
+ *    units, and not px units. This assures
+ *    a minimum readable size for most 
+ *    laptop and desktop displays.
+ * 
+ * B) The entire web app will be a constant
+ *    font size-derived width and height, 
+ *    but inner elements will be scaled by %.
+ *    This is simply to remove the need for
+ *    manual size calculation, and does not
+ *    indicate that elements should scale
+ *    directly with the window size.
+ * 
+ * C) Because of the choice of using em
+ *    units, another cornerstone of size
+ *    will be the scale of the data and
+ *    output themselves. Drosophila
+ *    melanogaster chromosome arm lengths
+ *    are in the tens of millions only, so
+ *    a single data point cannot be more
+ *    than 15 (7+7+1) characters long; many
+ *    element sizes will reflect this.
+ */
+
 html {
-	margin: 0;
-	padding: 0;
+	font: 10pt georgia, sans-serif;
 }
 body {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	font: 75% georgia, sans-serif; 
 	background-color: #CDBFDD;
-	width: 99%;
+	width: 100%;
+	min-width: 20em;
+	max-width: 50em;
 	height: 150%;
 }
 p {
-	margin-top: 0; 
 	text-align: justify;
 }
-.foreground {
-	background-color: #B7A5DF;
-	height:85%;
-}
 .topbar {
-	position: absolute;
-	top: 0%;
-	left: 0%;
+	position: relative;
 	width: 100%;
-	height: 10%;
+	height: 12em;
 	text-align: center;
 	background-color: #9685BA;
-	min-height: 120px;
-}
-.initial-options {
-	position: absolute;
-	top: 11%;
-	width: 100%;
-	height: 10%;
-	background-color: #9685BA;
+	float: left;
 }
 .appspace {
-	position: absolute;
-	top: 22%;
 	width: 100%;
-	height: 70%;
+	max-width: 48em;
+	height: auto;
+	background-color: #B7A5DF;
+	float: left;
+	padding: 1em;
 }
 .data-group {
 	background-color: #9685BA;
-	height: 40%;
-	width: 22%;
+	height: auto;
+	min-width: 14em;
+	max-width: 14em;
 	position: relative;
-	border-style: solid;
-	border-width: 1px;
-	min-width: 300px;
 	float: left;
+	padding: 1em;
+	width: 35%;
 }
 .data-group-inputs {
-	width: 45%;
-	min-width: 600px;
-	margin-right: 10px;
-	margin-top: 10px
+
 }
 .data-group-remaining {
-	margin-top: 10px;
+
 }
 .data-group-collapse {
-	clear: both;
-	margin-top: 10px;
-}
-.button-data-inputs-sup
-{
-	background-color: #B7A5DF;
-	position: absolute;
-	left: 2%;
-	top: 5%;
-	height: 90%;
-	width: 45%;
-	border-style: solid;
-	border-width: 1px;
-}
-.button-data-inputs-neu
-{
-	background-color: #B7A5DF;
-	position: absolute;
-	left: 52%;
-	top: 5%;
-	height: 90%;
-	width: 45%;
-	border-style: solid;
-	border-width: 1px;
-}
-.button-data-single
-{
-	background-color: #B7A5DF;
-	position: absolute;
-	left: 5%;
-	top: 5%;
-	height: 90%;
-	width: 90%;
-	border-style: solid;
-	border-width: 1px;
-}
-button.add
-{
-	width: 20%;
-	height: 10%;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-button.delete
-{
-	width: 20%;
-	height: 10%;
-	position: absolute;
-	top: 0;
-	left: 80%;
-}
-button.single
-{
-	width: 30%;
-	height: 10%;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-button.clear
-{
-	width: 30%;
-	height: 10%;
-	position: absolute;
-	top: 90%;
-	left: 0;
-}
-select.listbox
-{
-	position: absolute;
-	top: 11%;
-	width: 100%;
-	height: 78%;
-}
 
-input
-{
-	width:10%;
 }
-textarea
-{
+.button-data {
+	background-color: #B7A5DF;
+	position: relative;
+	padding: 1em;
+	float: left;
+	height: 20em;
+	width: 12em;
+}
+button.single {
+	width: auto;
+	height: 2em;
+	position: relative;
+}
+button.add {
+	
+}
+button.delete {
+	
+}
+button.clear {
+	float: right;
+	height: 1.5em;
+	width: 1.5em;
+}
+select.listbox {
+	position: relative;
+	width: 100%;
+	height: 82%;
+}
+input {
+	width: 95%;
+}
+textarea {
 	width: 98%;
 	height: 87%;
-	position: absolute;
-	top: 10%;
+	position: relative;
+}
+.instruction-text {
+	display: block;
+}
+.title-bar {
+	position: relative;
+	float: left;
+	width: 100%;
+	margin-bottom: 1em;
 }
