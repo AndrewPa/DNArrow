@@ -4,6 +4,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>DNArrow 2.0b (c) Andrew Papadopoli 2013</title>
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
 		<!--My Scripts-->
 		<link rel="stylesheet" type="text/css" href="dnarrow-layout.css" media="screen" />
 		<script type="text/javascript" src="input_handling.js"></script>
@@ -11,7 +12,7 @@
 		<script type="text/javascript" src="algorithm_class.js"></script>
 		<!--Third-Party Scripts and Libraries-->
 		<script type="text/javascript" src="mdetect.js"></script> <!--Mobile device detection library-->
-		<script type="text/javascript">window.alert(MobileEsp.DetectTierIphone());</script>
+		<script type="text/javascript">var isMobile = MobileEsp.DetectTierIphone();</script> <!--Detect if viewed on most mobile devices-->
 	</head>
 	<body>
 		<div class="topbar">
