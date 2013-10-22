@@ -68,3 +68,13 @@ textarea {
 		float: left;
 	}
 }
+@media (max-width: 420px) {
+	.data-group {
+	background-color: #9685BA;
+	height: 260px;
+	width: 96%;
+	position: relative;
+	float: left;
+	padding: 10px;
+}
+}
