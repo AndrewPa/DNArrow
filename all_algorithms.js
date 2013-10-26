@@ -1,4 +1,16 @@
 //single-instance class containing all coordinate handling code
+
+function fullSort(a) {	//modified sort function sorts numerically (ascending) by first endpoint then second endpoint
+	a.sort(function(a, b) {
+		if(a.split(";")[0] - b.split(";")[0] !== 0) { 
+			return a.split(";")[0] - b.split(";")[0]; 
+		} else {
+			return a.split(";")[1] - b.split(";")[1]; 
+		}
+	});
+	return a;
+}
+
 var AllAlgorithms = new (function() {
 	this.eliminateOverlaps = function (chrom_length, tested_regions) { //Removes inactive regions from active ones; output becomes input of Hotspots and Collapse.
 		if(!chrom_length && !tested_regions) {
@@ -170,7 +182,7 @@ var AllAlgorithms = new (function() {
 			return solutions;
 		}
 
-		buildListbox(collapse_textbox);
+		buildListbox(preloaded.collapse_textbox);
 		return true;
 	};
 
@@ -186,7 +198,7 @@ var AllAlgorithms = new (function() {
 			covered_regions = [];
 		}
 			remaining_arrays[this.chrom_arm] = neweliminate.algorithm(num_bases, covered_regions); //then take those regions as 'neus' and the whole chromosome as a 'sup'	
-			buildListbox(remaining_textbox);
+			buildListbox(preloaded.remaining_textbox);
 			return true;
 	};
 })();

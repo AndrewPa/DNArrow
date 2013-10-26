@@ -7,12 +7,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<!--My Scripts-->
 		<link rel="stylesheet" type="text/css" href="dnarrow-layout.css" media="screen" />
-		<script type="text/javascript" src="input_handling.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<script type="text/javascript" src="input_parsing.js"></script>
+		<script type="text/javascript" src="display_controls.js"></script>
 		<script type="text/javascript" src="all_algorithms.js"></script>
 		<script type="text/javascript" src="algorithm_class.js"></script>
-		<!--Third-Party Scripts and Libraries-->
-		<script type="text/javascript" src="mdetect.js"></script> <!--Mobile device detection library-->
-		<script type="text/javascript">var isMobile = MobileEsp.DetectTierIphone();</script> <!--Detect if viewed on most mobile devices-->
 	</head>
 	<body>
 		<div class="topbar">
@@ -35,28 +34,28 @@
 				<div class="button-data">
 					<div class="title-bar">
 						ACTIVE
-						<button class="single clear" type="submit" onClick="clearListbox(supbox,sup_arrays);">C</button>
+						<button class="single clear" type="submit" onClick="clearListbox(preloaded.supbox,sup_arrays);">C</button>
 					</div>
-					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(supbox,sup_arrays));"></select>
+					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(preloaded.supbox,sup_arrays));"></select>
 					<input id="sup_input" type="text" placeholder="e.g.: 100;200 200;300" 
-					onkeypress="if(event.keyCode==13)(submitCoordinate('sup_input',supbox,sup_arrays));">
+					onkeypress="if(event.keyCode==13)(submitCoordinate('sup_input',preloaded.supbox,sup_arrays));">
 					<!--Design Consideration: Keep or remove input list buttons-->
-					<!--<button class="single add" type="submit" onClick="submitCoordinate('sup_input',supbox,sup_arrays);">Add</button>
-					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(supbox,sup_arrays);">Delete</button>-->
+					<!--<button class="single add" type="submit" onClick="submitCoordinate('sup_input',preloaded.supbox,sup_arrays);">Add</button>
+					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(preloaded.supbox,sup_arrays);">Delete</button>-->
 				</div>
 			</div>
 			<div class="data-group">
 				<div class="button-data">
 					<div class="title-bar">
 						INACTIVE
-						<button class="single clear" type="submit" onClick="clearListbox(neubox,neu_arrays);">C</button>
+						<button class="single clear" type="submit" onClick="clearListbox(preloaded.neubox,neu_arrays);">C</button>
 					</div>
-					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(neubox,neu_arrays));"></select>
+					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(preloaded.neubox,neu_arrays));"></select>
 					<input id="neu_input" type="text" placeholder="e.g.: 100;200 200;300" 
-					onkeypress="if(event.keyCode==13)(submitCoordinate('neu_input',neubox,neu_arrays));">
+					onkeypress="if(event.keyCode==13)(submitCoordinate('neu_input',preloaded.neubox,neu_arrays));">
 					<!--Design Consideration: Keep or remove input list buttons-->
-					<!--<button class="single add" type="submit" onClick="submitCoordinate('neu_input',neubox,neu_arrays);">Add</button>
-					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(neubox,neu_arrays);">Delete</button>-->
+					<!--<button class="single add" type="submit" onClick="submitCoordinate('neu_input',preloaded.neubox,neu_arrays);">Add</button>
+					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(preloaded.neubox,neu_arrays);">Delete</button>-->
 				</div>
 			</div>
 			<div class="data-group">

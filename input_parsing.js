@@ -1,43 +1,3 @@
-window.onload = function getElements()
-{
-	window.supbox = document.getElementById("sup_coordslist");
-	window.neubox = document.getElementById("neu_coordslist");
-	window.collapse_textbox = document.getElementById("collapse_textbox");
-	window.remaining_textbox = document.getElementById("remaining_textbox");
-	window.elim_textbox = 0; //spacekeeper: will be fixed when converted to objects
-	window.all_boxes = [supbox, neubox, elim_textbox, collapse_textbox, remaining_textbox]; //TO DO: convert to objects
-	window.armselect = document.getElementById('chrom_arm');
-
-    return true;
-};
-
-//The order of solution arrays and their corresponding display elements is critical for correct display;
-//this is because the same index is called in order to bind the correct display to the correct array
-var coordarray = [];
-var all_arms = ["2L", "2R", "3L", "3R"];
-var sup_arrays = [[], [], [], []];
-var neu_arrays = [[], [], [], []];
-var elim_arrays = [[], [], [], []];
-var narrow_arrays = [[], [], [], []];
-var collapse_arrays = [[], [], [], []];
-var remaining_arrays = [[], [], [], []];
-var array_types = [sup_arrays, neu_arrays, elim_arrays, collapse_arrays, remaining_arrays];
-var armselect = document.getElementById('chrom_arm');
-var format_alert = "\n\n" + "Format: [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2] " + 
-				   "\n\n" + "e.g.: 100;200 200;300 300;400 etc.";
-//The order of chromosome arms and associated arrays is critical for proper entry;
-//for the purpose of this script I use the convention: 2L, 2R, 3L, 3R from L->R
-function fullSort(a) {	//modified sort function sorts numerically (ascending) by first endpoint then second endpoint
-	a.sort(function(a, b) {
-		if(a.split(";")[0] - b.split(";")[0] !== 0) { 
-			return a.split(";")[0] - b.split(";")[0]; 
-		} else {
-			return a.split(";")[1] - b.split(";")[1]; 
-		}
-	});
-	return a;
-}
-
 function verifyFormat(targ) {
     if(targ.match(/(^[1-9]\d+|^[0-9]);([1-9]\d+$|[1-9]$)/))
     {
@@ -45,7 +5,7 @@ function verifyFormat(targ) {
     }
     else if(targ.match((/^[2-3](L|R):/)))
     {
-    	if(targ.slice(0,2) === armselect.value)
+    	if(targ.slice(0,2) === preloaded.armselect.value)
     	{
     		return 2; //case 2: entry contains redundant chromosome arm label
     	}
@@ -74,59 +34,6 @@ function verifyFormat(targ) {
     format_alert);
     
     return false; //if the end of the function is reached without returning, no matches were found
-
-}
-
-function buildListbox()
-{
-    if(arguments[0])
-	{
-	    target_listbox = [arguments[0]];
-	}
-	else
-	{
-		target_listbox = all_boxes;
-	}
-
-	for(listbox in target_listbox)
-	{
-	    var array_type = array_types[all_boxes.indexOf(target_listbox[listbox])];
-	    var working_array = array_type[armselect.selectedIndex];
-	    fullSort(working_array);
-
-        if(target_listbox[listbox].type === "select-one")
-        {
-            target_listbox[listbox].options.length = 0;
-
-	        for(coord_index in working_array)
-            {
-            
-                if(working_array[coord_index] === " ")
-                {
-            	    continue;
-                }
-
-                var newcoord = document.createElement('option');
-                newcoord.value = all_arms[armselect.selectedIndex] + ":" + working_array[coord_index];
-                newcoord.text = all_arms[armselect.selectedIndex] + ":" + working_array[coord_index];
-
-                target_listbox[listbox].add(newcoord, null);
-            }
-        }
-        else
-        {
-            var result_text = "";
-
-            for(var i = 0; i < working_array.length; i++)
-            {
-                result_text += working_array[i] + "\n";
-            }
-    
-            target_listbox[listbox].value = result_text;
-        }
-    }
-
-    return true;
 
 }
 
@@ -163,7 +70,7 @@ function submitCoordinate(input_choice,form_choice,arrays_type)
         return false;
     }
 
-    var working_array = arrays_type[armselect.selectedIndex]; //array associated with the selected arm
+    var working_array = arrays_type[preloaded.armselect.selectedIndex]; //array associated with the selected arm
     
     window.coord_parsed = coordform.value.trim().split(" ");
     coord_parsed = coord_parsed.filter(function(element) { if(element !== "") { return true; }});
@@ -263,28 +170,8 @@ function deleteCoordinate(delform_choice,arrays_type)
 	
 	buildListbox(all_arms.indexOf(to_remove_arm),delform);
 
-    elim_textbox.value = "";
+    preloaded.elim_textbox.value = "";
     narrow_textbox.value = "";
 
 	return true;
-}
-
-function clearListbox(formchoice,array_type)
-{
-	var boxname = "";
-
-	if(formchoice === supbox)
-	{
-		boxname = "active region";
-	}
-	else if(formchoice === neubox)
-	{
-		boxname = "inactive region";
-	}
-	if(confirm("Clear all " + boxname + " coordinates?"))
-	{
-	    formchoice.options.length = 0;
-	
-        array_type[armselect.selectedIndex] = [];
-	}
 }
