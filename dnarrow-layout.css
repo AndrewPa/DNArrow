@@ -64,7 +64,7 @@ textarea {
 	font-size: 20px;
 	font-style: italic;
 }
-@media (max-width: 750px) {
+@media (max-width: 830px) {
 	.instruction-text {
 		float: left;
 	}

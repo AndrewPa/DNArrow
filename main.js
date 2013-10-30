@@ -29,12 +29,18 @@ var format_alert = "\n\n" + "Format: [CoordinateA1];[CoordinateA2] [CoordinateB1
 //The order of chromosome arms and associated arrays is critical for proper entry;
 //for the purpose of this script I use the convention: 2L, 2R, 3L, 3R from L->R
 
-/*
-	New data storage structure:
-		var data = {
-			2L: { elim: [], etc.},
-			2R: { elim: [], etc.},
-			3L: { elim: [], etc.},
-			3R: { elim: [], etc.} 
-		};
-*/
+function DataFactory(arm_label) {
+	this.sup = [];
+	this.neu = [];
+	this.elim = [];
+	this.collapse = [];
+	this.remaining = [];
+	//this.hotspots = []; (not yet implemented)
+}
+
+var data = {
+	arm2L: new DataFactory(),
+	arm2R: new DataFactory(),
+	arm3L: new DataFactory(),
+	arm3R: new DataFactory()
+};
