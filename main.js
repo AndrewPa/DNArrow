@@ -44,3 +44,7 @@ var data = {
 	arm3L: new DataFactory(),
 	arm3R: new DataFactory()
 };
+
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.open("GET","http://localhost/php_retrieve/retrieve_mysql/mysql_fetch.php",true);
+xmlhttp.send();
