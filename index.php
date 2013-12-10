@@ -6,7 +6,7 @@
 		  </div>";
 
 	$username = "dnarrowadmin";
-	$password = "thepassword";
+	$password = "walkersss";
 	$server = "localhost";
 	$database = "dnarrow";
 
@@ -68,7 +68,7 @@
 			<h2>Welcome to DNArrow 2.1</h2>
 			<h5>(c) Andrew Papadopoli 2014
 			<h4>
-				Please enter your coordinates. Detailed instructions are <a onclick="showInstructions();">here</a>.
+				Please enter your coordinates. Detailed instructions are <a class="ins-link" onclick="showInstructions();">here</a>.
 			</h4>
 			<h4>Select Chromosome Arm to Analyze:
 				<select id="chrom_arm" onchange="buildListbox();">
@@ -83,7 +83,7 @@
 			<div id="sup_data_group" class="data-group">
 				<div class="title-bar">
 					Active
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.supbox,sup_arrays);" role="button" aria-disabled="false" title="close">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.supbox,sup_arrays);" role="button" aria-disabled="false" title="Clear All">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
@@ -99,7 +99,7 @@
 			<div id="neu_data_group" class="data-group">
 				<div class="title-bar">
 					Inactive
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.neubox,neu_arrays);" role="button" aria-disabled="false" title="close">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.neubox,neu_arrays);" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
@@ -115,7 +115,7 @@
 			<div id="rem_data_group" class="data-group">
 				<div class="title-bar">
 					Remaining
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="clearListbox(preloaded.neubox,neu_arrays);" role="button" aria-disabled="false" title="close">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.remaining_textbox);" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
@@ -127,35 +127,17 @@
 			<div id="col_data_group" class="data-group">
 				<div class="title-bar">
 					Collapse
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="clearListbox(preloaded.neubox,neu_arrays);" role="button" aria-disabled="false" title="close">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.collapse_textbox);" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
-				<div class="button-data results">
+				<div class="input-data results">
 					<textarea id="collapse_textbox"></textarea>
 					<button class="single algorithm" type="submit" onClick="newcollapse.algorithm();">Collapse</button>
 				</div>
 			</div>
 		</div>
-		<div id="det_ins" title="Detailed Instructions">
-			<p>
-				Enter the active/inactive region coordinates into their respective input forms.
-				These can be typed in manually one at a time, or many at once, with each
-				region separated by a single space.	These can also be added by copying (sorted)
-				columns from an excel file and pasting the results into their respective input boxes.
-			</p>
-			<p>The format should be as follows:</p>
-			<p>[CoordA1];[CoordA2] [CoordB1];[CoordB2]</p> 
-			<p>e.g.: 100;200 200;300 300;400 etc.</p>
-			<p>
-				Please ensure that left and right bounds are separated by a semicolon (;)
-				and that only <em>spaces</em> separate each region. When ready to submit,
-				press "enter" on your keyboard. You may delete any single coordinate from either
-				of the two input boxes by selecting them and pressing the "delete" key on your keyboard.
-			</p>	
-		</div>
-		<div id="dialog-confirm">
-			"Clear all " + boxname + " coordinates?"
-		</div>
+		<div id="det_ins" title="Detailed Instructions"></div>
+		<div id="dialog-confirm"></div>
 	</body>
 </html>

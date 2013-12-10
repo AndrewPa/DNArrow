@@ -1,39 +1,71 @@
-function clearListbox(formchoice,array_type) {
-	var boxname = "";
-
-	if(formchoice === preloaded.supbox) {
-		boxname = "active region";
+function clearListText(formchoice,array_type) {
+	if(array_type == null) {
+		formchoice.value = "";
 	}
-	else if(formchoice === preloaded.neubox) {
-		boxname = "inactive region";
+	else {
+		formchoice.options.length = 0;
+		array_type[preloaded.armselect.selectedIndex] = [];
 	}
-	formchoice.options.length = 0;
-	array_type[preloaded.armselect.selectedIndex] = [];
 }
 
 function showInstructions() { 
+	$( "#det_ins" ).append(" \
+			<p> \
+				Enter the active/inactive region coordinates into their respective input forms. \
+				These can be typed in manually one at a time, or many at once, with each \
+				region separated by a single space.	These can also be added by copying (sorted) \
+				columns from an excel file and pasting the results into their respective input boxes. \
+			</p> \
+			<p>The format should be as follows:</p> \
+			<p>[CoordA1];[CoordA2] [CoordB1];[CoordB2]</p> \
+			<p>e.g.: 100;200 200;300 300;400 etc.</p> \
+			<p> \
+				Please ensure that left and right bounds are separated by a semicolon (;) \
+				and that only <em>spaces</em> separate each region. When ready to submit, \
+				press enter on your keyboard. You may delete any single coordinate from either \
+				of the two input boxes by selecting them and pressing the delete key on your keyboard. \
+			</p> \
+	");
 	$( "#det_ins" ).dialog({
 		width: 300,
 		modal: true,
-		resizable: false
+		resizable: false,
+		closeText: null,
+		close: function() {
+			$( "#det_ins" ).empty();
+		}
 	});
 }
 
 function confirmClear(formchoice,array_type) {
+	var message = "";
+
+	if(formchoice === preloaded.supbox) {
+		message = "active region coordinates?";
+	}
+	else if(formchoice === preloaded.neubox) {
+		message = "inactive region coordinates?";
+	}
+	else if(formchoice === preloaded.remaining_textbox) {
+		message = "results from Remaining?";
+	}
+	else if(formchoice === preloaded.collapse_textbox) {
+		message = "results from Collapse?";
+	}
+	$( "#dialog-confirm" ).text("Clear all " + message);
 	$( "#dialog-confirm" ).dialog({
 		resizable: false,
 		height: 140,
 		modal: true,
 		title: "Confirm Input Removal",
+		closeText: null,
 		buttons: {
-			"Delete all items": function() {
+			"Clear All": function() {
 				$( this ).dialog( "close" );
-				clearListbox(formchoice,array_type);
+				clearListText(formchoice,array_type);
 			},
 			Cancel: function() {
 				$( this ).dialog( "close" );
-				getConfirmation(false);
-				clearListbox(formchoice,array_type);
 			}
 		}
 	});

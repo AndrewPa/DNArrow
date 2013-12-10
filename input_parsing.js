@@ -150,28 +150,27 @@ function submitCoordinate(input_choice,form_choice,arrays_type)
     //from this array (above) thus has a downstream filtering effect on the listbox values
 }
 
-function deleteCoordinate(delform_choice,arrays_type)
-{
+function deleteCoordinate(delform_choice,arrays_type) {
 	var delform = delform_choice;
-	
-	if(delform[delform.selectedIndex] === undefined)
-	{
-	    return false;
+
+	if(delform[delform.selectedIndex] === undefined) {
+		return false;
 	}
-	
+
 	var to_remove_name = delform[delform.selectedIndex].value;
 	var to_remove_arm = to_remove_name.slice(0,2);
 	var rem_array = arrays_type[all_arms.indexOf(to_remove_arm)];
-	
+
 	delete rem_array[rem_array.indexOf(to_remove_name.slice(3,to_remove_name.length))];
-	
-    fullSort(rem_array);
-    rem_array.pop();
-	
+
+	fullSort(rem_array);
+	rem_array.pop();
+
 	buildListbox(all_arms.indexOf(to_remove_arm),delform);
 
-    preloaded.elim_textbox.value = "";
-    narrow_textbox.value = "";
+	preloaded.elim_textbox.value = "";
+	remaining_textbox.value = "";
+	collapse_textbox.value = "";
 
 	return true;
 }
