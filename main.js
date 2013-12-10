@@ -29,6 +29,10 @@ var format_alert = "\n\n" + "Format: [CoordinateA1];[CoordinateA2] [CoordinateB1
 //The order of chromosome arms and associated arrays is critical for proper entry;
 //for the purpose of this script I use the convention: 2L, 2R, 3L, 3R from L->R
 
+var splash = document.getElementById("loading_data");
+	splash.parentNode.removeChild(splash);
+	//Removes "loading" text after data is loaded and passed to JS
+
 function DataFactory(arm_label) {
 	this.sup = [];
 	this.neu = [];
@@ -44,7 +48,3 @@ var data = {
 	arm3L: new DataFactory(),
 	arm3R: new DataFactory()
 };
-
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.open("GET","http://localhost/php_retrieve/retrieve_mysql/mysql_fetch.php",true);
-xmlhttp.send();

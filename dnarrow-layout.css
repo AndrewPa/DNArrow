@@ -1,88 +1,116 @@
+/*
+ * Main Color Scheme:
+ * #A985C8 - background, data-group:hover
+ * #7D52A5- topbar, data-group, title-bar
+ * #8D6AAA - appspace, input-data
+ * 
+ * Dialog Color Scheme:
+ * #592D80 - ui-widget-header
+ * #784AA2 - ui-widget-content
+ *
+ * Design Notes:
+ * - Select-boxes, text-areas and input fields determine the size of the content boxes in the appspace.
+ *   They each have hard-coded size information instead of their parent containers.
+ */
+
 html {
-	font: 10pt georgia, sans-serif;
+	font: 10pt arial, sans-serif;
+	color: #FFFFFF;
 }
 body {
-	background-color: #CDBFDD;
-	min-width: 200px;
-	max-width: 960px;
-	float: left;
-}
-p {
-	text-align: justify;
+	background-color: #A985C8;
+	min-width: 250px;
+	text-align: center;
 }
 .topbar {
-	position: relative;
 	text-align: center;
-	background-color: #9685BA;
-	float: left;
-	width: 100%;
+	background-color: #7D52A5;
 }
 .appspace {
-	max-width: 540px;
-	background-color: #B7A5DF;
-	float: left;
-	padding: 2%;
+	background-color: #8D6AAA;
+	padding: 10px;
+	max-width: 610px;
+	display: inline-block;
 }
 .data-group {
-	background-color: #9685BA;
-	height: 260px;
-	width: 160px;
-	position: relative;
+	background-color: #7D52A5;
+	padding: 10px;
+	width: 180px;
+	height: 270px;
 	float: left;
+}
+#sup_data_group, #neu_data_group {
+	margin-right: 5px;
+}
+#col_data_group {
+	margin-top: 5px;
+}
+.input-data {
+	background-color: #8D6AAA;
 	padding: 10px;
 }
 .button-data {
-	background-color: #B7A5DF;
-	height: 240px;
+	background-color: #8D6AAA;
 	padding: 10px;
+	width: 160px;
+	height: 220px;
+}
+.input-data:hover {
+	background-color: #A985C8;
 }
 button.single {
-	height: 30px;
+	height: 25px;
+	border-radius: 6px;
+	box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.4);
+	font-weight: bold;
 }
 button.clear {
-	float: right;
-	position: relative;
 	bottom: 3px;
 }
+button.algorithm {
+	margin-top: 5px;
+}
 select.listbox {
-	position: relative;
-	height: 81%;
-	width: 100%;
+	height: 200px;
+	width: 160px;
 }
 input {
-	width: 10em;
+	width: 160px;
+	display: block;
 }
 textarea {
-	float: left;
-	height: 85%;
-	width: 95%;
+	resize: none;
+	width: 160px;
+	height: 190px;
+	display: block;
 }
 .title-bar {
-	height: 10%;
-	width: 100%;
+	font: 10pt georgia, sans-serif;
 	text-align: center;
 	font-size: 20px;
 	font-style: italic;
+	background-color: #7D52A5;
 }
-@media (max-width: 830px) {
-	.instruction-text {
-		float: left;
-	}
+@media (max-width: 680px) {
 	.appspace {
-		max-width: 1000px;
-		width: 96%
+		max-width: 405px;
 	}
-	.data-group {
-		width: 30%;
+	#neu_data_group {
+		margin-right: 0px;
 	}
-}
-@media (max-width: 660px) {
-	.data-group {
-		width: 45%;
+	#rem_data_group {
+		margin-top: 5px;
+		margin-right: 5px;
 	}
 }
-@media (max-width: 450px) {
+@media (max-width: 460px) {
+	.appspace {
+		max-width: 200px;
+	}
 	.data-group {
-		width: 92%;
+		margin-right: 0px;
+	}
+	#neu_data_group {
+		margin-top: 5px;
 	}
 }
