@@ -1,18 +1,3 @@
-window.onload = function initQueryDOM() {
-	window.preloaded = {
-		supbox: document.getElementById("sup_coordslist"),
-		neubox: document.getElementById("neu_coordslist"),
-		collapse_textbox: document.getElementById("collapse_textbox"),
-		remaining_textbox: document.getElementById("remaining_textbox"),
-		elim_textbox: 0, //spacekeeper: will be fixed when converted to objects
-		armselect: document.getElementById('chrom_arm')
-	};
-	window.preloaded.all_boxes = [
-		preloaded.supbox, preloaded.neubox, preloaded.elim_textbox, preloaded.collapse_textbox, preloaded.remaining_textbox
-	]; //TO DO: convert to objects
-    return true;
-};
-
 //The order of solution arrays and their corresponding display elements is critical for correct display;
 //this is because the same index is called in order to bind the correct display to the correct array
 var coordarray = [];

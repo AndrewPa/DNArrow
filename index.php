@@ -54,9 +54,9 @@
 		<!--Third-Party Scripts-->
 		<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui-1.10.3.dialog.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="js/jquery-ui-1.10.3.custom.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.css" media="screen" />
 		<!--My Scripts-->
-		<link rel="stylesheet" type="text/css" href="dnarrow-layout.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="css/dnarrow-layout.css" media="screen" />
 		<script type="text/javascript" src="main.js"></script>
 		<script type="text/javascript" src="input_parsing.js"></script>
 		<script type="text/javascript" src="display_controls.js"></script>
@@ -68,7 +68,7 @@
 			<h2>Welcome to DNArrow 2.1</h2>
 			<h5>(c) Andrew Papadopoli 2014
 			<h4>
-				Please enter your coordinates. Detailed instructions are <a class="ins-link" onclick="showInstructions();">here</a>.
+				Please enter your coordinates. <a class="ins-link" onclick="showInstructions();">See detailed instructions here.</a>
 			</h4>
 			<h4>Select Chromosome Arm to Analyze:
 				<select id="chrom_arm" onchange="buildListbox();">
