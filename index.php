@@ -31,10 +31,14 @@
 		return JSON_encode($pre_JSON);
 	}
 
-	$JSON2L = loadArm("2L");
-	$JSON2R = loadArm("2R");
-	$JSON3L = loadArm("3L");
-	$JSON3R = loadArm("3R");
+	$JSON2LA = loadArm("2L");
+	$JSON2LI = loadArm("2L");
+	$JSON2RA = loadArm("2R");
+	$JSON2RI = loadArm("2R");
+	$JSON3LA = loadArm("3L");
+	$JSON3LI = loadArm("3L");
+	$JSON3RA = loadArm("3R");
+	$JSON3RI = loadArm("3R");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -46,10 +50,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<!--Passing JSON Objects from PHP to JS-->
 		<script>
-			var JSON2L = <?php echo $JSON2L ?>;
-			var JSON2R = <?php echo $JSON2R ?>;
-			var JSON3L = <?php echo $JSON3L ?>;
-			var JSON3R = <?php echo $JSON3R ?>;
+			var JSON2LA = <?php echo $JSON2LA ?>;
+			var JSON2LI = <?php echo $JSON2LI ?>;
+			var JSON2RA = <?php echo $JSON2RA ?>;
+			var JSON2RI = <?php echo $JSON2RI ?>;
+			var JSON3LA = <?php echo $JSON3LA ?>;
+			var JSON3LI = <?php echo $JSON3LI ?>;
+			var JSON3RA = <?php echo $JSON3RA ?>;
+			var JSON3RI = <?php echo $JSON3RI ?>;
 		</script>
 		<!--Third-Party Scripts-->
 		<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
@@ -65,24 +73,40 @@
 	</head>
 	<body>
 		<div class="topbar">
-			<h2>Welcome to DNArrow 2.1</h2>
+			<h2>DNArrow 2.1</h2>
 			<h5>(c) Andrew Papadopoli 2014
 			<h4>
 				Please enter your coordinates. <a class="ins-link" onclick="showInstructions();">See detailed instructions here.</a>
 			</h4>
-			<h4>Select Chromosome Arm to Analyze:
+			<h4>Select Chromosome Arm to Analyze:</h4>
+			<h4>
+				<div class="arm-box" onclick="selectArmBox('arm_box_2L')">
+					<span class="arm-box-label">2L</span>
+				</div>
+				<div class="arm-box" onclick="selectArmBox('arm_box_2R')">
+					<span class="arm-box-label">2R</span>
+				</div>
+				<div class="arm-box" onclick="selectArmBox('arm_box_3L')">
+					<span class="arm-box-label">3L</span>
+				</div>
+				<div class="arm-box" onclick="selectArmBox('arm_box_3R')">
+					<span class="arm-box-label">3R</span>
+				</div>
 				<select id="chrom_arm" onchange="buildListbox();">
 					<option value="2L">2L</option>
 					<option value="2R">2R</option>
 					<option value="3L">3L</option>
 					<option value="3R">3R</option>
 	           	</select>
+	           	<button class="ui-button ui-state-default ui-button-icon-only single load" onclick="window.alert('Not yet implemented!');" role="button" aria-disabled="false" title="Load Data">
+	    			<span class="ui-button-icon-primary ui-icon ui-icon-plusthick"></span>
+				</button>
 			</h4>
 		</div>
 		<div class="appspace">
 			<div id="sup_data_group" class="data-group">
 				<div class="title-bar">
-					Active
+					<span class="title-bar-text">Active</span>
 					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.supbox,sup_arrays);" role="button" aria-disabled="false" title="Clear All">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
@@ -98,7 +122,7 @@
 			</div>
 			<div id="neu_data_group" class="data-group">
 				<div class="title-bar">
-					Inactive
+					<span class="title-bar-text">Inactive</span>
 					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.neubox,neu_arrays);" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
@@ -114,26 +138,30 @@
 			</div>
 			<div id="rem_data_group" class="data-group">
 				<div class="title-bar">
-					Remaining
+					<span class="title-bar-text">Remaining</span>
 					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.remaining_textbox);" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
 				<div class="input-data">
 					<textarea id="remaining_textbox"></textarea>
-					<button class="single algorithm" type="submit" onClick="newremaining.algorithm();">Remaining</button>
+					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="newremaining.algorithm();" role="button" aria-disabled="false" title="Run Algorithm">
+	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
+					</button>
 				</div>
 			</div>
 			<div id="col_data_group" class="data-group">
 				<div class="title-bar">
-					Collapse
+					<span class="title-bar-text">Collapse</span>
 					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.collapse_textbox);" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
 				<div class="input-data results">
 					<textarea id="collapse_textbox"></textarea>
-					<button class="single algorithm" type="submit" onClick="newcollapse.algorithm();">Collapse</button>
+					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="newcollapse.algorithm();" role="button" aria-disabled="false" title="Run Algorithm">
+	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
+					</button>
 				</div>
 			</div>
 		</div>

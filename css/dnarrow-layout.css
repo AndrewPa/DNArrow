@@ -4,7 +4,7 @@
  * #7D52A5- topbar, data-group, title-bar
  * #8D6AAA - appspace, input-data
  * #ABA3FF - a.ins-link
- * #8CAEE6 - input-focus (border)
+ * #8CAEE6 - input-focus (border), arm-box (hover border)
  * 
  * Dialog Color Scheme:
  * #592D80 - ui-widget-header
@@ -23,12 +23,42 @@ body {
 .topbar {
 	text-align: center;
 	background-color: #7D52A5;
+	margin-bottom: 5px;
+	padding: 1px;
 }
 a.ins-link {
 	color: #ABA3FF;
+	cursor: default;
 }
 a.ins-link:hover {
 	text-decoration: underline;
+}
+.arm-box {
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	display: inline-block;
+	color: #665874;
+	border-radius: 6px;
+	border-style: solid;
+	border-color: #A985C8;
+	border-width: 2px;
+	cursor: default;
+
+}
+.arm-box:hover,.arm-box-active {
+	border-color: #8CAEE6;
+}
+.arm-box-label {
+	position: relative;
+	font-size: 25px;
+	top: 5px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 .appspace {
 	background-color: #8D6AAA;
@@ -57,6 +87,15 @@ a.ins-link:hover {
 	background-color: #A985C8;
 	/*Rest of dynamic behavior found in display-controls.js*/
 }
+.title-bar {
+	font: 10pt georgia, sans-serif;
+	font-size: 20px;
+	font-style: italic;
+	position: relative;
+}
+.title-bar-text {
+	
+}
 input {
 	width: 160px;
 	display: block;
@@ -76,21 +115,31 @@ input:hover,input:focus,input.input-focus {
 button.single {
 	height: 25px;
 	border-radius: 6px;
-	box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.4);
 	font-weight: bold;
+	position: relative;
+}
+button.single:hover {
+	background-color: #FFFFFF;
+}
+button.single:active {
+	background-color: #5F5964;
+}
+button.load {
+	width: 24px;
+	height: 22px;
+	bottom: 2px;
+}
+button.play {
+	height: 20px;
+	width: 100px;
+	top: 4px;
 }
 button.clear {
 	position: absolute;
+	width: 24px;
 	right: 0px;
-	height: 25px;
-	width: 25px;
+	height: 22px;
 	bottom: 2px;
-}
-button.clear:hover {
-	background-color: #FFFFFF;
-}
-button.clear:active {
-	background-color: #5F5964;
 }
 button.algorithm {
 	margin-top: 5px;
@@ -102,14 +151,8 @@ select.listbox {
 textarea {
 	resize: none;
 	width: 160px;
-	height: 190px;
+	height: 200px;
 	display: block;
-}
-.title-bar {
-	font: 10pt georgia, sans-serif;
-	font-size: 20px;
-	font-style: italic;
-	position: relative;
 }
 @media (max-width: 680px) {
 	.appspace {

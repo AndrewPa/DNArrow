@@ -160,6 +160,7 @@
 	border: 1px dotted black;
 }
 .ui-button {
+	border-radius: 6px;
 	display: inline-block;
 	position: relative;
 	padding: 0;
@@ -285,10 +286,10 @@ button.ui-button::-moz-focus-inner {
 	position: absolute;
 	right: .3em;
 	top: 50%;
-	width: 21px;
+	width: 24px;
+	height: 22px;
 	margin: -10px 0 0 0;
 	padding: 1px;
-	height: 20px;
 }
 .ui-dialog .ui-dialog-content {
 	position: relative;

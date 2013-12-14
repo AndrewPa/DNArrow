@@ -11,7 +11,8 @@ window.onload = function initQueryDOM() {
 		//Initial DOM Query Items for Dynamic CSS Alterations
 		sup_input: document.getElementById("sup_input"),
 		neu_input: document.getElementById("neu_input"),
-		input_data: document.getElementsByClassName("input-data")
+		input_data: document.getElementsByClassName("input-data"),
+		arm_boxes: document.getElementsByClassName("arm-box")
 	};
 	window.preloaded.all_boxes = [
 		preloaded.supbox, preloaded.neubox, preloaded.elim_textbox, preloaded.collapse_textbox, preloaded.remaining_textbox
@@ -40,8 +41,32 @@ window.onload = function initQueryDOM() {
 		window.preloaded.neu_input_data.classList.remove("input-data-hover");
 	};
 
+	window.preloaded.arm_box_2L = window.preloaded.arm_boxes[0];
+	window.preloaded.arm_box_2R = window.preloaded.arm_boxes[1];
+	window.preloaded.arm_box_3L = window.preloaded.arm_boxes[2];
+	window.preloaded.arm_box_3R = window.preloaded.arm_boxes[3];
+
+	//An arbitrary Arm Selection Box is set here as a dummy DOM element for the first time selectArmBox() is called
+	window.sel_arm_box = window.preloaded.arm_box_2L;
+	window.old_arm_box_label = "arm_box_2L";
+
 	return true;
 };
+
+function selectArmBox(arm_box_label) {
+	/*
+	 * Controls display of light colored border around Arm Selection Boxes
+	 * Deletes and re-applies 'onclick' attribute to selected boxes to prevent 
+	 * additional function calls when the same box is clicked repeatedly
+	 */
+	window.cur_arm_box_label = arm_box_label;
+	window.sel_arm_box.classList.remove("arm-box-active");
+	window.sel_arm_box.setAttribute("onclick","selectArmBox(\'" + window.old_arm_box_label + "\')");
+	window.sel_arm_box = window.preloaded[arm_box_label];
+	window.old_arm_box_label = cur_arm_box_label;
+	window.preloaded[arm_box_label].removeAttribute("onclick");
+	window.preloaded[arm_box_label].classList.add("arm-box-active");
+}
 
 function clearListText(formchoice,array_type) {
 	if(array_type == null) {
@@ -56,18 +81,18 @@ function clearListText(formchoice,array_type) {
 function showInstructions() {
 	$( "#det_ins" ).append(
 			"<p>" +
-				"Enter the active/inactive region coordinates into their respective input forms." +
-				"These can be typed in manually one at a time, or many at once, with each" +
-				"region separated by a single space.	These can also be added by copying (sorted)" +
+				"Enter the active/inactive region coordinates into their respective input forms. " +
+				"These can be typed in manually one at a time, or many at once, with each " +
+				"region separated by a single space. These can also be added by copying (sorted) " +
 				"columns from an excel file and pasting the results into their respective input boxes." +
 			"</p>" +
 			"<p>The format should be as follows:</p>" +
 			"<p>[A1];[A2] [B1];[B2]</p>" +
 			"<p>e.g.: 100;200 200;300 300;400 etc.</p>" +
 			"<p>" +
-				"Please ensure that left and right bounds are separated by a semicolon (;)" +
-				"and that only <em>spaces</em> separate each region. When ready to submit," +
-				"press enter on your keyboard. You may delete any single coordinate from either" +
+				"Please ensure that left and right bounds are separated by a semicolon (;) " +
+				"and that only <em>spaces</em> separate each region. When ready to submit, " +
+				"press enter on your keyboard. You may delete any single coordinate from either " +
 				"of the two input boxes by selecting them and pressing the delete key on your keyboard." +
 			"</p>"
 	);
@@ -78,9 +103,8 @@ function showInstructions() {
 		closeText: null,
 		close: function() {
 			$( "#det_ins" ).empty();
-		}
+		},
 	});
-
 	/*
 	 * Developer note:
 	 * What follows is a work-around for jQuery-UI's limited dialog positioning 
@@ -89,7 +113,6 @@ function showInstructions() {
 	 * the dialog maintains a fixed position in the exact center of the browser
 	 * window at all times, even upon resizing and scrolling.
 	 */
-
 	$( "#det_ins" ).dialog('widget').attr("id", "fixed-dialog");
 	$( "#fixed-dialog" ).css({
 		"top":"50%",
@@ -102,7 +125,7 @@ function showInstructions() {
 function confirmClear(formchoice,array_type) {
 	var message = "";
 
-	if(formchoice === preloaded.supbox) {
+	if(formchoice === preloaded.supbox) { //TO DO: Convert ELIF tree to associative array
 		message = "active region coordinates?";
 	}
 	else if(formchoice === preloaded.neubox) {
@@ -131,6 +154,7 @@ function confirmClear(formchoice,array_type) {
 			}
 		}
 	});
+	$(".ui-dialog-titlebar-close").removeAttr("title");
 }
 
 function buildListbox() {
@@ -167,3 +191,41 @@ function buildListbox() {
 	}
 	return true;
 }
+
+/*
+//Function Backup
+
+function buildListbox() {
+	if(arguments[0]) {
+		target_listbox = [arguments[0]];
+	}
+	else {
+		target_listbox = preloaded.all_boxes;
+	}
+	for(listbox in target_listbox) {
+		var array_type = array_types[preloaded.all_boxes.indexOf(target_listbox[listbox])];
+		var working_array = array_type[preloaded.armselect.selectedIndex];
+		fullSort(working_array);
+
+		if(target_listbox[listbox].type === "select-one") {
+			target_listbox[listbox].options.length = 0;
+			for(coord_index in working_array) {
+				if(working_array[coord_index] === " ") {
+					continue;
+				}
+				var newcoord = document.createElement('option');
+				newcoord.value = all_arms[preloaded.armselect.selectedIndex] + ":" + working_array[coord_index];
+				newcoord.text = all_arms[preloaded.armselect.selectedIndex] + ":" + working_array[coord_index];
+				target_listbox[listbox].add(newcoord, null);
+			}
+		}
+		else {
+			var result_text = "";
+			for(var i = 0; i < working_array.length; i++) {
+				result_text += working_array[i] + "\n";
+			}
+			target_listbox[listbox].value = result_text;
+		}
+	}
+	return true;
+}*/
