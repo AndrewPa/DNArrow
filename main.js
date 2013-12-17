@@ -18,19 +18,14 @@ var splash = document.getElementById("loading_data");
 	splash.parentNode.removeChild(splash);
 	//Removes "loading" text after data is loaded and passed to JS
 
-function DataFactory(arm_label) {
-	this.sup = [];
-	this.neu = [];
-	this.elim = [];
-	this.collapse = [];
-	this.remaining = [];
-	//this.hotspots = []; (not yet implemented)
-}
+//Appends result arrays to each chromosome arm's dataset
+(function() {
+	var res_arrays = ["ELM","COL","REM"];
 
-var data = {
-	arm2L: new DataFactory(),
-	arm2R: new DataFactory(),
-	arm3L: new DataFactory(),
-	arm3R: new DataFactory()
-};
-
+	for (chro_arm in JSON_data) {
+		for (res_array in res_arrays) {
+			var cur_array = res_arrays[res_array];
+			JSON_data[chro_arm][cur_array] = [];
+		};
+	}
+}());

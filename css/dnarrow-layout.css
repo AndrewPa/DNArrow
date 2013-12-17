@@ -33,32 +33,43 @@ a.ins-link {
 a.ins-link:hover {
 	text-decoration: underline;
 }
-.arm-box {
-	width: 40px;
-	height: 40px;
-	background-color: white;
+.choose-box {
 	display: inline-block;
-	color: #665874;
 	border-radius: 6px;
 	border-style: solid;
 	border-color: #A985C8;
+	background-color: #8D6AAA;
 	border-width: 2px;
 	cursor: default;
-
 }
-.arm-box:hover,.arm-box-active {
+.choose-box:hover,.choose-box-active {
 	border-color: #8CAEE6;
 }
-.arm-box-label {
+.choose-box-label {
 	position: relative;
-	font-size: 25px;
-	top: 5px;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+.arm-box {
+	width: 40px;
+	height: 40px;
+}
+.arm-box-label {
+	font-size: 25px;
+	top: 5px;
+}
+.sup-enh-toggle {
+	font-style: italic;
+	width: 30px;
+}
+.sup-enh-toggle-label {
+	font: 10pt georgia, sans-serif;
+	font-size: 25px;
+	font-style: italic;
 }
 .appspace {
 	background-color: #8D6AAA;
@@ -127,7 +138,7 @@ button.single:active {
 button.load {
 	width: 24px;
 	height: 22px;
-	bottom: 2px;
+	bottom: 4px;
 }
 button.play {
 	height: 20px;

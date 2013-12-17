@@ -9,6 +9,8 @@
 	$password = "walkersss";
 	$server = "localhost";
 	$database = "dnarrow";
+	$chro_arms = array("2L","2R","3L","3R");
+	$res_types = array("SUP","ENH","X");
 
 	$mysqlconnection = mysql_connect($server, $username, $password);
 	if (!$mysqlconnection) {
@@ -19,26 +21,26 @@
 	if (!$databaseconnection) {
 		die('There was a problem selecting the MySQL database. Error given: '. mysql_error());
 	}
-	
-	function loadArm($arm) {
-		$data = mysql_query("SELECT stk, sym, lft_most, lft, rgt, rgt_most FROM dmel_data WHERE arm = '$arm'")
+
+	function loadResult($arm,$type) {
+		$full_result = array();
+		$data = mysql_query("SELECT lft_most, lft, rgt, rgt_most FROM dmel_data WHERE arm = '$arm' and res_type = '$type'")
 		or die('There was a problem selecting columns from the table. Error given: '. mysql_error());
 		while($info = mysql_fetch_array($data)) {
-			$stk_sym = "STK" . $info['stk'] . "SYM" . $info['sym'];
-			$coordinates = array((int)$info['lft_most'],(int)$info['lft'],(int)$info['rgt'],(int)$info['rgt_most']);
-			$pre_JSON[$stk_sym] = $coordinates;
-		}
-		return JSON_encode($pre_JSON);
+			array_push($full_result,$info);
+		};
+		return $full_result;
 	}
 
-	$JSON2LA = loadArm("2L");
-	$JSON2LI = loadArm("2L");
-	$JSON2RA = loadArm("2R");
-	$JSON2RI = loadArm("2R");
-	$JSON3LA = loadArm("3L");
-	$JSON3LI = loadArm("3L");
-	$JSON3RA = loadArm("3R");
-	$JSON3RI = loadArm("3R");
+	$pre_JSON_data = array();
+	foreach ($chro_arms as $chro_arm) {
+		foreach ($res_types as $res_type) {
+			$pre_JSON_data[$chro_arm][$res_type] = loadResult($chro_arm,$res_type);
+		};
+	};
+
+$JSON_data = JSON_encode($pre_JSON_data);
+
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -46,18 +48,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>DNArrow 2.1 (c) Andrew Papadopoli 2013</title>
+		<title>DNArrow 2.1 (c) Andrew Papadopoli 2014</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<!--Passing JSON Objects from PHP to JS-->
+		<!--Passing JSON Object from PHP to JS-->
 		<script>
-			var JSON2LA = <?php echo $JSON2LA ?>;
-			var JSON2LI = <?php echo $JSON2LI ?>;
-			var JSON2RA = <?php echo $JSON2RA ?>;
-			var JSON2RI = <?php echo $JSON2RI ?>;
-			var JSON3LA = <?php echo $JSON3LA ?>;
-			var JSON3LI = <?php echo $JSON3LI ?>;
-			var JSON3RA = <?php echo $JSON3RA ?>;
-			var JSON3RI = <?php echo $JSON3RI ?>;
+			var JSON_data = <?php echo $JSON_data ?>;
 		</script>
 		<!--Third-Party Scripts-->
 		<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
@@ -76,30 +71,39 @@
 			<h2>DNArrow 2.1</h2>
 			<h5>(c) Andrew Papadopoli 2014
 			<h4>
-				Please enter your coordinates. <a class="ins-link" onclick="showInstructions();">See detailed instructions here.</a>
+				Please enter your coordinates or load them from the lab database. 
+				<a class="ins-link" onclick="showInstructions();">See detailed instructions here.</a>
 			</h4>
-			<h4>Select Chromosome Arm to Analyze:</h4>
+			<h4>Select chromosome arm and result type to analyze:</h4>
 			<h4>
-				<div class="arm-box" onclick="selectArmBox('arm_box_2L')">
-					<span class="arm-box-label">2L</span>
+				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_2L')">
+					<span class="choose-box-label arm-box-label">2L</span>
 				</div>
-				<div class="arm-box" onclick="selectArmBox('arm_box_2R')">
-					<span class="arm-box-label">2R</span>
+				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_2R')">
+					<span class="choose-box-label arm-box-label">2R</span>
 				</div>
-				<div class="arm-box" onclick="selectArmBox('arm_box_3L')">
-					<span class="arm-box-label">3L</span>
+				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_3L')">
+					<span class="choose-box-label arm-box-label">3L</span>
 				</div>
-				<div class="arm-box" onclick="selectArmBox('arm_box_3R')">
-					<span class="arm-box-label">3R</span>
+				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_3R')">
+					<span class="choose-box-label arm-box-label">3R</span>
 				</div>
-				<select id="chrom_arm" onchange="buildListbox();">
+				<!--<select id="chrom_arm" onchange="buildListbox();">
 					<option value="2L">2L</option>
 					<option value="2R">2R</option>
 					<option value="3L">3L</option>
 					<option value="3R">3R</option>
-	           	</select>
-	           	<button class="ui-button ui-state-default ui-button-icon-only single load" onclick="window.alert('Not yet implemented!');" role="button" aria-disabled="false" title="Load Data">
-	    			<span class="ui-button-icon-primary ui-icon ui-icon-plusthick"></span>
+				</select>-->
+			</h4>
+			<h4>
+				<div class="choose-box sup-enh-toggle" onclick="radioSelector('e_s_panel','enh_toggle')">
+					<span class="choose-box-label sup-enh-toggle-label">E</span>
+				</div>
+				<div class="choose-box sup-enh-toggle" onclick="radioSelector('e_s_panel','sup_toggle')">
+					<span class="choose-box-label sup-enh-toggle-label">S</span>
+				</div>
+				<button class="ui-button ui-state-default ui-button-icon-only single load" onclick="window.alert('Not yet implemented!');" role="button" aria-disabled="false" title="Load Data">
+					<span class="ui-button-icon-primary ui-icon ui-icon-plusthick"></span>
 				</button>
 			</h4>
 		</div>

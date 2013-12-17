@@ -12,7 +12,8 @@ window.onload = function initQueryDOM() {
 		sup_input: document.getElementById("sup_input"),
 		neu_input: document.getElementById("neu_input"),
 		input_data: document.getElementsByClassName("input-data"),
-		arm_boxes: document.getElementsByClassName("arm-box")
+		arm_boxes: document.getElementsByClassName("arm-box"),
+		sup_enh_toggles: document.getElementsByClassName("sup-enh-toggle")
 	};
 	window.preloaded.all_boxes = [
 		preloaded.supbox, preloaded.neubox, preloaded.elim_textbox, preloaded.collapse_textbox, preloaded.remaining_textbox
@@ -45,27 +46,66 @@ window.onload = function initQueryDOM() {
 	window.preloaded.arm_box_2R = window.preloaded.arm_boxes[1];
 	window.preloaded.arm_box_3L = window.preloaded.arm_boxes[2];
 	window.preloaded.arm_box_3R = window.preloaded.arm_boxes[3];
+	
+	window.preloaded.enh_toggle = window.preloaded.sup_enh_toggles[0];
+	window.preloaded.sup_toggle = window.preloaded.sup_enh_toggles[1];
 
-	//An arbitrary Arm Selection Box is set here as a dummy DOM element for the first time selectArmBox() is called
-	window.sel_arm_box = window.preloaded.arm_box_2L;
-	window.old_arm_box_label = "arm_box_2L";
+	//An arbitrary toggle button is set here as a dummy DOM element for the first time radioSelector() is called
+	window.button_states = {
+		arm_panel: {
+			sel_button: window.preloaded.arm_box_2L,
+			prev_label: "arm_box_2L"
+		},
+		e_s_panel: {
+			sel_button: window.preloaded.enh_toggle,
+			prev_label: "enh_toggle"
+		}
+	};
+
+	//Default selections
+	radioSelector('arm_panel','arm_box_2L');
+	radioSelector('e_s_panel','enh_toggle');
+
+	//New data structure scaffold
+	window.preloaded.dataset = {
+		"2L": {},
+		"2R": {},
+		"3L": {},
+		"3R": {}
+	};
+
+	window.preloaded.sub_dataset = {
+		SUP: {}, //Active regions: suppressors only
+		ENH: {}, //Active regions: enhancers only
+		X: {},   //All inactive regions
+		ELM: [], //Results from "eliminateOverlaps"
+		REM: [], //Results from "computeRemaining"
+		COL: []  //Results from "collapseCoords"
+	};
+
+	for (s_dataset in window.preloaded.dataset) {
+		window.preloaded.dataset[s_dataset] = window.preloaded.sub_dataset;
+	};
 
 	return true;
 };
 
-function selectArmBox(arm_box_label) {
+function radioSelector(panel_name,button_label) {
 	/*
 	 * Controls display of light colored border around Arm Selection Boxes
 	 * Deletes and re-applies 'onclick' attribute to selected boxes to prevent 
 	 * additional function calls when the same box is clicked repeatedly
 	 */
-	window.cur_arm_box_label = arm_box_label;
-	window.sel_arm_box.classList.remove("arm-box-active");
-	window.sel_arm_box.setAttribute("onclick","selectArmBox(\'" + window.old_arm_box_label + "\')");
-	window.sel_arm_box = window.preloaded[arm_box_label];
-	window.old_arm_box_label = cur_arm_box_label;
-	window.preloaded[arm_box_label].removeAttribute("onclick");
-	window.preloaded[arm_box_label].classList.add("arm-box-active");
+	//Shorthand local variable
+	var states = button_states[panel_name];
+
+	cur_label = button_label;
+	states.sel_button.classList.remove("choose-box-active");
+	states.sel_button.setAttribute("onclick","radioSelector(\'" + panel_name + "\',\'" + states.prev_label + "\')");
+	states.sel_button = window.preloaded[button_label];
+	states.prev_label = cur_label;
+	preloaded[button_label].removeAttribute("onclick");
+	preloaded[button_label].classList.add("choose-box-active");
 }
 
 function clearListText(formchoice,array_type) {

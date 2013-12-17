@@ -48,80 +48,74 @@ function parseUncertain(coord,type)
 	    
         return sides.join(";");
     }
-    else if(type === "neu")
-    {
-    	sides[0] = Math.max.apply(null,sides[0].split("--"));
-	    sides[1] = Math.min.apply(null,sides[1].split("--"));
-	    
-        return sides.join(";");
-    }
+	else if(type === "neu")
+	{
+		sides[0] = Math.max.apply(null,sides[0].split("--"));
+		sides[1] = Math.min.apply(null,sides[1].split("--"));
+
+		return sides.join(";");
+	}
 }
 
-function submitCoordinate(input_choice,form_choice,arrays_type)
-{
-    var coordform = document.getElementById(input_choice);
+function verifyEntries() {
+	for(coord_index in coord_parsed) {
+		switch(verifyFormat(coord_parsed[coord_index])) {
+            case 1:
+                var splitcoords = coord_parsed[coord_index].split(";");
 
-    if(coordform.value == false)
-    {
-        alert("Please enter a value.");
+                if(Number(splitcoords[0]) > Number(splitcoords[1]))
+		            {          			
+			            alert("One of your entries is invalid (" + coord_parsed[coord_index] +
+			            "). Coordinates must be typed left to right (lowest position to highest position)." +
+			            format_alert);
 
-        coordform.value = "";
+			            return false;
+		            }
+		            else if(Number(splitcoords[0]) === Number(splitcoords[1]))
+		            {
+			            alert("One of your entries is invalid (" + coord_parsed[coord_index] +
+			            "). You cannot define a region of zero length." +
+			            format_alert);
 
-        return false;
-    }
-
-    var working_array = arrays_type[preloaded.armselect.selectedIndex]; //array associated with the selected arm
-    
-    window.coord_parsed = coordform.value.trim().split(" ");
-    coord_parsed = coord_parsed.filter(function(element) { if(element !== "") { return true; }});
-    fullSort(coord_parsed);
-
-    function verifyEntries()
-	{
-   		for(coord_index in coord_parsed)
-   		{	
-            switch(verifyFormat(coord_parsed[coord_index]))
-            {
-                case 1:
-                    var splitcoords = coord_parsed[coord_index].split(";");
-
-                    if(Number(splitcoords[0]) > Number(splitcoords[1]))
-    		            {          			
-   				            alert("One of your entries is invalid (" + coord_parsed[coord_index] +
-   				            "). Coordinates must be typed left to right (lowest position to highest position)." +
-   				            format_alert);
-
-    			            return false;
-    		            }
-    		            else if(Number(splitcoords[0]) === Number(splitcoords[1]))
-    		            {
-    			            alert("One of your entries is invalid (" + coord_parsed[coord_index] +
-   				            "). You cannot define a region of zero length." +
-   				            format_alert);
-
-    			            return false;
-    		            }
-                        break;
-                case 2:
-                    coord_parsed[coord_index] = coord_parsed[coord_index].slice(3,coord_parsed[coord_index].length);
-
-                    if(verifyFormat(coord_parsed[coord_index]) !== 3)
-                    {
-                    	break;
-                    }
-                case 3:
-                    coord_parsed[coord_index] = parseUncertain(coord_parsed[coord_index],coordform.id.slice(0,3));
-                    
+			            return false;
+		            }
                     break;
-                default:
-                    return false;
-            }
-        }
+            case 2:
+                coord_parsed[coord_index] = coord_parsed[coord_index].slice(3,coord_parsed[coord_index].length);
 
-        return true;
-
+                if(verifyFormat(coord_parsed[coord_index]) !== 3)
+                {
+                	break;
+                }
+            case 3:
+                coord_parsed[coord_index] = parseUncertain(coord_parsed[coord_index],coordform.id.slice(0,3));
+                
+                break;
+			default:
+				return false;
+		}
 	}
-        
+
+	return true;
+
+}
+
+function submitCoordinate(input_choice,form_choice,arrays_type) {
+	var coordform = document.getElementById(input_choice);
+
+	if(coordform.value == false) {
+		alert("Please enter a value.");
+		coordform.value = "";
+
+		return false;
+	}
+
+	var working_array = preloaded.dataset.; //array associated with the selected arm
+
+	window.coord_parsed = coordform.value.trim().split(" ");
+	coord_parsed = coord_parsed.filter(function(element) { if(element !== "") { return true; }});
+	fullSort(coord_parsed);
+
 	if(verifyEntries() === true)
 	{
     	for(coord_index in coord_parsed)
@@ -132,13 +126,13 @@ function submitCoordinate(input_choice,form_choice,arrays_type)
     		}
     		else
     		{
-    			Array.prototype.push.call(working_array,coord_parsed[coord_index]);
+				Array.prototype.push.call(working_array,coord_parsed[coord_index]);
     		}
     	}
 
-        fullSort(working_array);
+		fullSort(working_array);
 
-    	buildListbox(form_choice);
+		buildListbox(form_choice);
 
         coordform.value = "";
 
