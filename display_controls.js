@@ -1,95 +1,3 @@
-window.onload = function initQueryDOM() {
-	window.preloaded = {
-		//Initial DOM Query Items for Data/Results Display Boxes
-		supbox: document.getElementById("sup_coordslist"),
-		neubox: document.getElementById("neu_coordslist"),
-		collapse_textbox: document.getElementById("collapse_textbox"),
-		remaining_textbox: document.getElementById("remaining_textbox"),
-		elim_textbox: 0, //spacekeeper: will be fixed when converted to objects
-		armselect: document.getElementById('chrom_arm'),
-		sup_input: document.getElementById("sup_input"),
-		//Initial DOM Query Items for Dynamic CSS Alterations
-		sup_input: document.getElementById("sup_input"),
-		neu_input: document.getElementById("neu_input"),
-		input_data: document.getElementsByClassName("input-data"),
-		arm_boxes: document.getElementsByClassName("arm-box"),
-		sup_enh_toggles: document.getElementsByClassName("sup-enh-toggle")
-	};
-	window.preloaded.all_boxes = [
-		preloaded.supbox, preloaded.neubox, preloaded.elim_textbox, preloaded.collapse_textbox, preloaded.remaining_textbox
-	]; //TO DO: convert to objects
-	
-	//Items for Dynamic CSS Alterations
-	window.preloaded.sup_input_data = window.preloaded.input_data[0];
-	window.preloaded.neu_input_data = window.preloaded.input_data[1];
-	window.preloaded.rem_input_data = window.preloaded.input_data[2];
-	window.preloaded.col_input_data = window.preloaded.input_data[3];
-
-	window.preloaded.sup_input.onfocus = function() {
-		window.preloaded.sup_input.classList.add("input-focus");
-		window.preloaded.sup_input_data.classList.add("input-data-hover");
-	};
-	window.preloaded.sup_input.onblur = function() {
-		window.preloaded.sup_input.classList.remove("input-focus");
-		window.preloaded.sup_input_data.classList.remove("input-data-hover");
-	};
-	window.preloaded.neu_input.onfocus = function() {
-		window.preloaded.neu_input.classList.add("input-focus");
-		window.preloaded.neu_input_data.classList.add("input-data-hover");
-	};
-	window.preloaded.neu_input.onblur = function() {
-		window.preloaded.neu_input.classList.remove("input-focus");
-		window.preloaded.neu_input_data.classList.remove("input-data-hover");
-	};
-
-	window.preloaded.arm_box_2L = window.preloaded.arm_boxes[0];
-	window.preloaded.arm_box_2R = window.preloaded.arm_boxes[1];
-	window.preloaded.arm_box_3L = window.preloaded.arm_boxes[2];
-	window.preloaded.arm_box_3R = window.preloaded.arm_boxes[3];
-	
-	window.preloaded.enh_toggle = window.preloaded.sup_enh_toggles[0];
-	window.preloaded.sup_toggle = window.preloaded.sup_enh_toggles[1];
-
-	//An arbitrary toggle button is set here as a dummy DOM element for the first time radioSelector() is called
-	window.button_states = {
-		arm_panel: {
-			sel_button: window.preloaded.arm_box_2L,
-			prev_label: "arm_box_2L"
-		},
-		e_s_panel: {
-			sel_button: window.preloaded.enh_toggle,
-			prev_label: "enh_toggle"
-		}
-	};
-
-	//Default selections
-	radioSelector('arm_panel','arm_box_2L');
-	radioSelector('e_s_panel','enh_toggle');
-
-	//New data structure scaffold
-	window.preloaded.dataset = {
-		"2L": {},
-		"2R": {},
-		"3L": {},
-		"3R": {}
-	};
-
-	window.preloaded.sub_dataset = {
-		SUP: {}, //Active regions: suppressors only
-		ENH: {}, //Active regions: enhancers only
-		X: {},   //All inactive regions
-		ELM: [], //Results from "eliminateOverlaps"
-		REM: [], //Results from "computeRemaining"
-		COL: []  //Results from "collapseCoords"
-	};
-
-	for (s_dataset in window.preloaded.dataset) {
-		window.preloaded.dataset[s_dataset] = window.preloaded.sub_dataset;
-	};
-
-	return true;
-};
-
 function radioSelector(panel_name,button_label) {
 	/*
 	 * Controls display of light colored border around Arm Selection Boxes
@@ -157,6 +65,27 @@ function showInstructions() {
 	$( "#fixed-dialog" ).css({
 		"top":"50%",
 		"margin-top":"-259px",
+		"left":"50%",
+		"margin-left":"-150px"
+	});
+}
+
+function displayWarning(message) {
+	$( "#warning_text" ).append("<p>" + message + "</p>");
+	$( "#warning_text" ).dialog({
+	modal: true,
+	resizable: false,
+	draggable: false,
+	closeText: null,
+	width: 300,
+	close: function() {
+		$( "#warning_text" ).empty();
+		},
+	});
+	$( "#warning_text" ).dialog('widget').attr("id", "fixed-dialog");
+	$( "#fixed-dialog" ).css({
+		"top":"50%",
+		"margin-top":"-108px", //Auto height for current font and width is 216px
 		"left":"50%",
 		"margin-left":"-150px"
 	});

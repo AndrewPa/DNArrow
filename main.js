@@ -1,3 +1,97 @@
+//Performs all critical starting operations, e.g. DOM queries and data scaffold construction
+window.onload = function initQueryDOM() {
+	window.preloaded = {
+		//Initial DOM Query Items for Data/Results Display Boxes
+		supbox: document.getElementById("sup_coordslist"),
+		neubox: document.getElementById("neu_coordslist"),
+		collapse_textbox: document.getElementById("collapse_textbox"),
+		remaining_textbox: document.getElementById("remaining_textbox"),
+		elim_textbox: 0, //spacekeeper: will be fixed when converted to objects
+		armselect: document.getElementById('chrom_arm'),
+		//Initial DOM Query Items for Dynamic CSS Alterations
+		act_input: document.getElementById("act_input"),
+		ina_input: document.getElementById("ina_input"),
+		input_data: document.getElementsByClassName("input-data"),
+		arm_boxes: document.getElementsByClassName("arm-box"),
+		sup_enh_toggles: document.getElementsByClassName("sup-enh-toggle")
+	};
+	window.preloaded.all_boxes = [
+		preloaded.supbox, preloaded.neubox, preloaded.elim_textbox, preloaded.collapse_textbox, preloaded.remaining_textbox
+	]; //TO DO: convert to objects
+	
+	//Items for Dynamic CSS Alterations
+	window.preloaded.act_input_data = window.preloaded.input_data[0];
+	window.preloaded.ina_input_data = window.preloaded.input_data[1];
+	window.preloaded.rem_input_data = window.preloaded.input_data[2];
+	window.preloaded.col_input_data = window.preloaded.input_data[3];
+
+	window.preloaded.act_input.onfocus = function() {
+		window.preloaded.act_input.classList.add("input-focus");
+		window.preloaded.act_input_data.classList.add("input-data-hover");
+	};
+	window.preloaded.act_input.onblur = function() {
+		window.preloaded.act_input.classList.remove("input-focus");
+		window.preloaded.act_input_data.classList.remove("input-data-hover");
+	};
+	window.preloaded.ina_input.onfocus = function() {
+		window.preloaded.ina_input.classList.add("input-focus");
+		window.preloaded.ina_input_data.classList.add("input-data-hover");
+	};
+	window.preloaded.ina_input.onblur = function() {
+		window.preloaded.ina_input.classList.remove("input-focus");
+		window.preloaded.ina_input_data.classList.remove("input-data-hover");
+	};
+
+	window.preloaded.arm_box_2L = window.preloaded.arm_boxes[0];
+	window.preloaded.arm_box_2R = window.preloaded.arm_boxes[1];
+	window.preloaded.arm_box_3L = window.preloaded.arm_boxes[2];
+	window.preloaded.arm_box_3R = window.preloaded.arm_boxes[3];
+	
+	window.preloaded.enh_toggle = window.preloaded.sup_enh_toggles[0];
+	window.preloaded.sup_toggle = window.preloaded.sup_enh_toggles[1];
+
+	//An arbitrary toggle button is set here as a dummy DOM element for the first time radioSelector() is called
+	window.button_states = {
+		arm_panel: {
+			sel_button: window.preloaded.arm_box_2L,
+			prev_label: "arm_box_2L"
+		},
+		e_s_panel: {
+			sel_button: window.preloaded.enh_toggle,
+			prev_label: "enh_toggle"
+		}
+	};
+
+	//Default selections
+	radioSelector('arm_panel','arm_box_2L');
+	radioSelector('e_s_panel','enh_toggle');
+
+	//New data structure scaffold
+	window.preloaded.dataset = {
+		"2L": {},
+		"2R": {},
+		"3L": {},
+		"3R": {}
+	};
+
+	window.preloaded.sub_dataset = {
+		sup: [], //Active regions: suppressors only
+		enh: [], //Active regions: enhancers only
+		ina: [], //All inactive regions
+		elm: [], //Results from "eliminateOverlaps"
+		rem: [], //Results from "computeRemaining"
+		col: []  //Results from "collapseCoords"
+	};
+
+	for (s_dataset in window.preloaded.dataset) {
+		window.preloaded.dataset[s_dataset] = window.preloaded.sub_dataset;
+	};
+	
+	window.preloaded.
+
+	return true;
+};
+
 //The order of solution arrays and their corresponding display elements is critical for correct display;
 //this is because the same index is called in order to bind the correct display to the correct array
 var coordarray = [];
@@ -9,8 +103,8 @@ var narrow_arrays = [[], [], [], []];
 var collapse_arrays = [[], [], [], []];
 var remaining_arrays = [[], [], [], []];
 var array_types = [sup_arrays, neu_arrays, elim_arrays, collapse_arrays, remaining_arrays];
-var format_alert = "\n\n" + "Format: [CoordinateA1];[CoordinateA2] [CoordinateB1];[CoordinateB2] " + 
-				   "\n\n" + "e.g.: 100;200 200;300 300;400 etc.";
+var format_alert = "<p>[A1];[A2] [B1];[B2] [C1];[C2]...</p>" + 
+				   "<p>e.g.: 100;200 200;300 300;400 etc.</p>";
 //The order of chromosome arms and associated arrays is critical for proper entry;
 //for the purpose of this script I use the convention: 2L, 2R, 3L, 3R from L->R
 
@@ -20,7 +114,7 @@ var splash = document.getElementById("loading_data");
 
 //Appends result arrays to each chromosome arm's dataset
 (function() {
-	var res_arrays = ["ELM","COL","REM"];
+	var res_arrays = ["elm","col","rem"];
 
 	for (chro_arm in JSON_data) {
 		for (res_array in res_arrays) {
@@ -29,3 +123,9 @@ var splash = document.getElementById("loading_data");
 		};
 	}
 }());
+
+//Renaming inactive coordinate set name, "x" (from database) to more consistent, clear name
+for (cur_arm in all_arms) {
+	JSON_data[all_arms[cur_arm]]["ina"] = JSON_data[all_arms[cur_arm]]["x"];
+	delete JSON_data[all_arms[cur_arm]]["x"];
+}

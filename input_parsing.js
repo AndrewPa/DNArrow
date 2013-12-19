@@ -89,8 +89,8 @@ function verifyEntries() {
                 }
             case 3:
                 coord_parsed[coord_index] = parseUncertain(coord_parsed[coord_index],coordform.id.slice(0,3));
-                
-                break;
+
+				break;
 			default:
 				return false;
 		}
@@ -100,8 +100,96 @@ function verifyEntries() {
 
 }
 
-function submitCoordinate(input_choice,form_choice,arrays_type) {
-	var coordform = document.getElementById(input_choice);
+function parseVerifyCoord(targ_coord,cur_arm) {
+	//RegExp indicating coordinate begins with a redundant chromosome arm label
+	var re_apfx = new RegExp("^[2-3](L|R):");
+	//RegExp indicating body of entered coordinate is in the valid format
+	var re_bcor = new RegExp("(((^[1-9]\\d+|^[0-9])--([1-9]\\d+|[1-9]))|(^[1-9]\\d+|^[0-9]));"  + 
+                             "((([1-9]\\d+|[1-9])--([1-9]\\d+$|[1-9]$))|([1-9]\\d+$|[1-9]$))","g");
+
+	//Step 1: Broader parsing, verifying that basic format is correct
+	if (targ_coord.match(re_apfx)) {
+		if (targ_coord.slice(0,2) !== cur_arm) {
+			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
+			"<p>Please ensure each entry's prefix is either blank or the same as " +
+			"the one you selected in the chromosome arm selection panel.</p>");
+
+			return false;
+		}
+		else {
+			targ_coord = targ_coord.slice(3,targ_coord.length);
+		}
+	}
+
+	if(!targ_coord.match(re_bcor)) {
+		displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" + 
+		"<p> Please ensure that each coordinate is in the correct format." + "</p>" +
+    	format_alert);
+
+		return false;
+	}
+
+	//Step 2: Deeper parsing, verifying that specific features of entered data make sense
+	var lft = targ_coord.split(";")[0];
+	var rgt = targ_coord.split(";")[1];
+	var lft_most = lft.split("--")[0];
+	var rgt_most = rgt.split("--")[1];
+
+	if (lft !== lft_most) {       //If there is a left-hand breakpoint
+		lft = lft.split("--")[1]; //Then take the right-hand part of the left coordinate
+                                  //as the end of the lefthand uncertain breakpoint range
+		if (lft_most > lft) {
+			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
+			"<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>" +
+			format_alert);
+	
+			return false;
+		}
+	}
+	else {
+		lft_most = 0; //Indicates that there is no lefthand uncertain breakpoint
+	}
+
+	if (rgt !== rgt_most) {       //Likewise for the right-hand breakpoint
+		rgt = rgt.split("--")[0]; //except now take the left-hand part of the right coordinate
+                                  //as the beginning of the righthand uncertain breakpoint range
+		if (rgt > rgt_most) {
+			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
+			"<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>" +
+			format_alert);
+	
+			return false;
+		}
+	}
+	else {
+		rgt_most = 0; //Indicates that there is no righthand uncertain breakpoint
+	}
+
+	if (lft > rgt) {          			
+		displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
+		"<p>Coordinates must be typed left to right (lowest position to highest position).</p>" +
+		format_alert);
+
+		return false;
+	}
+	if (lft === rgt) {
+		displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
+		"<p>You cannot define a region of zero length.</p>" +
+		format_alert);
+
+		return false;
+	}
+	return {
+		"lft_most": lft_most,
+		"lft": lft,
+		"rgt": rgt,
+		"rgt_most": rgt_most,
+		"str_id": lft_most + "--" + lft + ";" + rgt + "--" + rgt_most
+	};
+}
+
+function submitCoordinates(type) {
+	var coordform = preloaded[type + "_input"];
 
 	if(coordform.value == false) {
 		alert("Please enter a value.");
@@ -110,38 +198,32 @@ function submitCoordinate(input_choice,form_choice,arrays_type) {
 		return false;
 	}
 
-	var working_array = preloaded.dataset.; //array associated with the selected arm
-
-	window.coord_parsed = coordform.value.trim().split(" ");
-	coord_parsed = coord_parsed.filter(function(element) { if(element !== "") { return true; }});
-	fullSort(coord_parsed);
-
-	if(verifyEntries() === true)
-	{
-    	for(coord_index in coord_parsed)
-    	{
-    		if(working_array.indexOf(coord_parsed[coord_index]) !== -1)
-    		{
-    			continue;
-    		}
-    		else
-    		{
-				Array.prototype.push.call(working_array,coord_parsed[coord_index]);
-    		}
-    	}
-
-		fullSort(working_array);
-
-		buildListbox(form_choice);
-
-        coordform.value = "";
-
+	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+	if (type === "act") {
+		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
 	}
-    
-    return true;
-    
-    //Each new listbox entry is built from the coord_parsed array; screening values
-    //from this array (above) thus has a downstream filtering effect on the listbox values
+	else if (type ==="ina") {
+		var cur_type = type;
+	}
+
+	var new_coords = coordform.value.trim().split(" ");
+	var cur_array = preloaded.dataset[cur_arm][cur_type];
+
+	//Removes whitespace between coordinate entries, which may result from copy-pasting data
+	new_coords = new_coords.filter(function(element) { if(element !== "") { return true; }});
+
+	for (cur_coord in new_coords) {
+		var parsed_coord = parseVerifyCoord(new_coords[cur_coord],cur_arm);
+
+		
+
+		if (unique) cur_array.push(parsed_coord);
+	}
+
+	buildListbox(form_choice);
+	coordform.value = "";
+	
+	return true;
 }
 
 function deleteCoordinate(delform_choice,arrays_type) {

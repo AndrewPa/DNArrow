@@ -10,7 +10,7 @@
 	$server = "localhost";
 	$database = "dnarrow";
 	$chro_arms = array("2L","2R","3L","3R");
-	$res_types = array("SUP","ENH","X");
+	$res_types = array("sup","enh","x");
 
 	$mysqlconnection = mysql_connect($server, $username, $password);
 	if (!$mysqlconnection) {
@@ -24,7 +24,16 @@
 
 	function loadResult($arm,$type) {
 		$full_result = array();
-		$data = mysql_query("SELECT lft_most, lft, rgt, rgt_most FROM dmel_data WHERE arm = '$arm' and res_type = '$type'")
+		$data = mysql_query(
+			"SELECT lft_most, lft, rgt, rgt_most, " .
+			"CONCAT(lft_most,'--',lft,';',rgt,'--',rgt_most) AS str_id " . //ID used later to ensure no duplicate coord data for different stocks 
+			"FROM dmel_data " .
+			"WHERE arm = '$arm' " .
+				"AND res_type = '$type' " .
+				"AND best = 'true' " .
+				"AND lft != 0 " . //Some results have no associated coordinates and cannot be analyzed here
+				"AND rgt != 0"
+		)
 		or die('There was a problem selecting columns from the table. Error given: '. mysql_error());
 		while($info = mysql_fetch_array($data)) {
 			array_push($full_result,$info);
@@ -117,8 +126,8 @@ $JSON_data = JSON_encode($pre_JSON_data);
 				</div>
 				<div class="input-data">
 					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(preloaded.supbox,sup_arrays));"></select>
-					<input id="sup_input" type="text" placeholder="e.g.: 100;200 200;300" 
-					onkeypress="if(event.keyCode==13)(submitCoordinate('sup_input',preloaded.supbox,sup_arrays));">
+					<input id="act_input" type="text" placeholder="e.g.: 100;200 200;300" 
+					onkeypress="if(event.keyCode==13)(submitCoordinates('act'));">
 					<!--Design Consideration: Keep or remove input list buttons-->
 					<!--<button class="single add" type="submit" onClick="submitCoordinate('sup_input',preloaded.supbox,sup_arrays);">Add</button>
 					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(preloaded.supbox,sup_arrays);">Delete</button>-->
@@ -133,7 +142,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 				</div>
 				<div class="input-data">
 					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(preloaded.neubox,neu_arrays));"></select>
-					<input id="neu_input" type="text" placeholder="e.g.: 100;200 200;300" 
+					<input id="ina_input" type="text" placeholder="e.g.: 100;200 200;300" 
 					onkeypress="if(event.keyCode==13)(submitCoordinate('neu_input',preloaded.neubox,neu_arrays));">
 					<!--Design Consideration: Keep or remove input list buttons-->
 					<!--<button class="single add" type="submit" onClick="submitCoordinate('neu_input',preloaded.neubox,neu_arrays);">Add</button>
@@ -170,6 +179,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 			</div>
 		</div>
 		<div id="det_ins" title="Detailed Instructions"></div>
+		<div id="warning_text" title="Notification"></div>
 		<div id="dialog-confirm"></div>
 	</body>
 </html>
