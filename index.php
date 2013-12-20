@@ -37,16 +37,74 @@
 		or die('There was a problem selecting columns from the table. Error given: '. mysql_error());
 		while($info = mysql_fetch_array($data)) {
 			array_push($full_result,$info);
-		};
+		}
 		return $full_result;
 	}
 
 	$pre_JSON_data = array();
+	$d_path = $pre_JSON_data[$chro_arm];
+
+	//Chooses the breakpoint interval to be used for future algorithms
+	//depending on the data type and algorithm
+	function getInterval($interval,$d_path) {
+		$f_results = $d_path["full"];
+		$return_array = array();
+
+		if ($interval == "largest") {
+			foreach ($f_results as $f_res) {
+				if ($d_path["full"][$f_res]["lft_most"] !== 0) {
+					$left = $d_path["full"][$f_res]["lft_most"];
+				}
+				else {
+					$left = $d_path["full"][$f_res]["lft"];
+				}
+				if ($d_path["full"]["rgt_most"] !== 0) {
+					$right = $d_path["full"][$f_res]["rgt_most"];
+				}
+				else {
+					$right = $d_path["full"][$f_res]["rgt"];
+				}
+				$used_interval = $left . ";" . $right;
+				array_push($return_array,$used_interval);
+			}
+		}
+		else if ($interval == "smallest") {
+			foreach ($f_results as $f_res) {
+				$left = $d_path["full"][$f_res]["lft"];
+				$right = $d_path["full"][$f_res]["rgt"];
+
+				$used_interval = $left . ";" . $right;
+				array_push($return_array,$used_interval);
+			}
+		}
+		return $return_array;
+	}
+
+	//For algorithm "remaining":
+	//Active regions ("sup" and "enh") are assumed to be associated with their smallest intervals
+	//Inactive regions ("x" or "ina") are assumed to be associated with their smallest intervals
 	foreach ($chro_arms as $chro_arm) {
 		foreach ($res_types as $res_type) {
-			$pre_JSON_data[$chro_arm][$res_type] = loadResult($chro_arm,$res_type);
-		};
-	};
+			$d_path = $pre_JSON_data[$chro_arm][$res_type];
+			$d_path["full"] = loadResult($chro_arm,$res_type);
+			$d_path["pre_rem"] = getInterval("smallest",$d_path);
+			$d_path["passed"] = array();
+		}
+	}
+
+	//For algorithm "collapse":
+	//Active regions ("sup" and "enh") are assumed to be associated with their largest intervals
+	//Inactive regions ("x" or "ina") are assumed to be associated with their smallest intervals
+	foreach ($chro_arms as $chro_arm) {
+		$d_path = $pre_JSON_data[$chro_arm]["sup"];
+		$d_path["pre_col"] = getInterval("largest",$d_path);
+		
+		$d_path = $pre_JSON_data[$chro_arm]["enh"];
+		$d_path["pre_col"] = getInterval("largest",$d_path);
+		
+		$d_path = $pre_JSON_data[$chro_arm]["x"];
+		$d_path["pre_col"] = getInterval("smallest",$d_path);
+	}
 
 $JSON_data = JSON_encode($pre_JSON_data);
 
