@@ -1,9 +1,9 @@
 <?php
-	echo "<div id='loading_data'>
-			  <h2>Welcome to DNArrow 2.1</h2>
-			  <h5>(c) Andrew Papadopoli 2014</h5>
-			  <p>Loading experimental results from database, please wait...</p>
-		  </div>";
+    echo "<div id='loading_data'>
+              <h2>Welcome to DNArrow 2.1</h2>
+              <h5>(c) Andrew Papadopoli 2014</h5>
+              <p>Loading experimental results from database, please wait...</p>
+          </div>";
 
 	$username = "dnarrowadmin";
 	$password = "walkersss";
@@ -42,27 +42,27 @@
 	}
 
 	$pre_JSON_data = array();
-	$d_path = $pre_JSON_data[$chro_arm];
 
 	//Chooses the breakpoint interval to be used for future algorithms
 	//depending on the data type and algorithm
-	function getInterval($interval,$d_path) {
-		$f_results = $d_path["full"];
+	function getInterval($interval,$chro_arm,$res_type) {
+		global $pre_JSON_data;
+		$f_results = $pre_JSON_data[$chro_arm][$res_type]["full"];
 		$return_array = array();
 
 		if ($interval == "largest") {
 			foreach ($f_results as $f_res) {
-				if ($d_path["full"][$f_res]["lft_most"] !== 0) {
-					$left = $d_path["full"][$f_res]["lft_most"];
+				if ($f_res["lft_most"] != 0) {
+					$left = $f_res["lft_most"];
 				}
 				else {
-					$left = $d_path["full"][$f_res]["lft"];
+					$left = $f_res["lft"];
 				}
-				if ($d_path["full"]["rgt_most"] !== 0) {
-					$right = $d_path["full"][$f_res]["rgt_most"];
+				if ($f_res["rgt_most"] != 0) {
+					$right = $f_res["rgt_most"];
 				}
 				else {
-					$right = $d_path["full"][$f_res]["rgt"];
+					$right = $f_res["rgt"];
 				}
 				$used_interval = $left . ";" . $right;
 				array_push($return_array,$used_interval);
@@ -70,8 +70,8 @@
 		}
 		else if ($interval == "smallest") {
 			foreach ($f_results as $f_res) {
-				$left = $d_path["full"][$f_res]["lft"];
-				$right = $d_path["full"][$f_res]["rgt"];
+				$left = $f_res["lft"];
+				$right = $f_res["rgt"];
 
 				$used_interval = $left . ";" . $right;
 				array_push($return_array,$used_interval);
@@ -85,10 +85,9 @@
 	//Inactive regions ("x" or "ina") are assumed to be associated with their smallest intervals
 	foreach ($chro_arms as $chro_arm) {
 		foreach ($res_types as $res_type) {
-			$d_path = $pre_JSON_data[$chro_arm][$res_type];
-			$d_path["full"] = loadResult($chro_arm,$res_type);
-			$d_path["pre_rem"] = getInterval("smallest",$d_path);
-			$d_path["passed"] = array();
+			$pre_JSON_data[$chro_arm][$res_type]["full"] = loadResult($chro_arm,$res_type);
+			$pre_JSON_data[$chro_arm][$res_type]["pre_rem"] = getInterval("smallest",$chro_arm,$res_type);
+			$pre_JSON_data[$chro_arm][$res_type]["passed"] = array();
 		}
 	}
 
@@ -96,14 +95,9 @@
 	//Active regions ("sup" and "enh") are assumed to be associated with their largest intervals
 	//Inactive regions ("x" or "ina") are assumed to be associated with their smallest intervals
 	foreach ($chro_arms as $chro_arm) {
-		$d_path = $pre_JSON_data[$chro_arm]["sup"];
-		$d_path["pre_col"] = getInterval("largest",$d_path);
-		
-		$d_path = $pre_JSON_data[$chro_arm]["enh"];
-		$d_path["pre_col"] = getInterval("largest",$d_path);
-		
-		$d_path = $pre_JSON_data[$chro_arm]["x"];
-		$d_path["pre_col"] = getInterval("smallest",$d_path);
+		$pre_JSON_data[$chro_arm]["sup"]["pre_col"] = getInterval("largest",$chro_arm,"sup");
+		$pre_JSON_data[$chro_arm]["enh"]["pre_col"] = getInterval("largest",$chro_arm,"enh");
+		$pre_JSON_data[$chro_arm]["x"]["pre_col"] = getInterval("smallest",$chro_arm,"x");
 	}
 
 $JSON_data = JSON_encode($pre_JSON_data);
@@ -131,7 +125,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 		<script type="text/javascript" src="input_parsing.js"></script>
 		<script type="text/javascript" src="display_controls.js"></script>
 		<script type="text/javascript" src="all_algorithms.js"></script>
-		<script type="text/javascript" src="algorithm_class.js"></script>
+		<!--<script type="text/javascript" src="algorithm_class.js"></script>-->
 	</head>
 	<body>
 		<div class="topbar">
@@ -177,18 +171,15 @@ $JSON_data = JSON_encode($pre_JSON_data);
 		<div class="appspace">
 			<div id="sup_data_group" class="data-group">
 				<div class="title-bar">
-					<span class="title-bar-text">Active</span>
+					<span id="active_title" class="title-bar-text">Active</span>
 					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.supbox,sup_arrays);" role="button" aria-disabled="false" title="Clear All">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
 				<div class="input-data">
-					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(preloaded.supbox,sup_arrays));"></select>
+					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('act'));"></select>
 					<input id="act_input" type="text" placeholder="e.g.: 100;200 200;300" 
 					onkeypress="if(event.keyCode==13)(submitCoordinates('act'));">
-					<!--Design Consideration: Keep or remove input list buttons-->
-					<!--<button class="single add" type="submit" onClick="submitCoordinate('sup_input',preloaded.supbox,sup_arrays);">Add</button>
-					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(preloaded.supbox,sup_arrays);">Delete</button>-->
 				</div>
 			</div>
 			<div id="neu_data_group" class="data-group">
@@ -199,12 +190,9 @@ $JSON_data = JSON_encode($pre_JSON_data);
 					</button>
 				</div>
 				<div class="input-data">
-					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate(preloaded.neubox,neu_arrays));"></select>
+					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('ina'));"></select>
 					<input id="ina_input" type="text" placeholder="e.g.: 100;200 200;300" 
-					onkeypress="if(event.keyCode==13)(submitCoordinate('neu_input',preloaded.neubox,neu_arrays));">
-					<!--Design Consideration: Keep or remove input list buttons-->
-					<!--<button class="single add" type="submit" onClick="submitCoordinate('neu_input',preloaded.neubox,neu_arrays);">Add</button>
-					<button class="single delete" type="delete_sup" onClick="deleteCoordinate(preloaded.neubox,neu_arrays);">Delete</button>-->
+					onkeypress="if(event.keyCode==13)(submitCoordinates('ina'));">
 				</div>
 			</div>
 			<div id="rem_data_group" class="data-group">

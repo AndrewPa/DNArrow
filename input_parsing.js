@@ -1,105 +1,3 @@
-function verifyFormat(targ) {
-    if(targ.match(/(^[1-9]\d+|^[0-9]);([1-9]\d+$|[1-9]$)/))
-    {
-    	return 1; //case 1: entry is in the correct format and is processed normally
-    }
-    else if(targ.match((/^[2-3](L|R):/)))
-    {
-    	if(targ.slice(0,2) === preloaded.armselect.value)
-    	{
-    		return 2; //case 2: entry contains redundant chromosome arm label
-    	}
-    	else
-    	{
-    		alert("One of your entries is invalid (" + targ +
-   			"). Please ensure each entry's prefix is either blank or the same as " +
-   			"the one you selected in the chromosome arm drop-down menu.");
-
-    		return false;
-    	}
-    }
-    else
-    {
-    	re = new RegExp("(((^[1-9]\\d+|^[0-9])--([1-9]\\d+|[1-9]))|(^[1-9]\\d+|^[0-9]));"  + 
-    	                "((([1-9]\\d+|[1-9])--([1-9]\\d+$|[1-9]$))|([1-9]\\d+$|[1-9]$))","g");
-
-    	if(targ.match(re))
-    	{
-            return 3; //case 3: entry contains uncertain breakpoints
-    	}
-    }
-    
-    alert("One of your entries is invalid (" + coord_parsed[coord_index] +
-    "). Please ensure that each coordinate is in the correct format." + 
-    format_alert);
-    
-    return false; //if the end of the function is reached without returning, no matches were found
-
-}
-
-function parseUncertain(coord,type)
-{
-	var sides = coord.split(";");
-	
-	if(type === "sup")
-	{
-	    sides[0] = Math.min.apply(null,sides[0].split("--"));
-	    sides[1] = Math.max.apply(null,sides[1].split("--"));
-	    
-        return sides.join(";");
-    }
-	else if(type === "neu")
-	{
-		sides[0] = Math.max.apply(null,sides[0].split("--"));
-		sides[1] = Math.min.apply(null,sides[1].split("--"));
-
-		return sides.join(";");
-	}
-}
-
-function verifyEntries() {
-	for(coord_index in coord_parsed) {
-		switch(verifyFormat(coord_parsed[coord_index])) {
-            case 1:
-                var splitcoords = coord_parsed[coord_index].split(";");
-
-                if(Number(splitcoords[0]) > Number(splitcoords[1]))
-		            {          			
-			            alert("One of your entries is invalid (" + coord_parsed[coord_index] +
-			            "). Coordinates must be typed left to right (lowest position to highest position)." +
-			            format_alert);
-
-			            return false;
-		            }
-		            else if(Number(splitcoords[0]) === Number(splitcoords[1]))
-		            {
-			            alert("One of your entries is invalid (" + coord_parsed[coord_index] +
-			            "). You cannot define a region of zero length." +
-			            format_alert);
-
-			            return false;
-		            }
-                    break;
-            case 2:
-                coord_parsed[coord_index] = coord_parsed[coord_index].slice(3,coord_parsed[coord_index].length);
-
-                if(verifyFormat(coord_parsed[coord_index]) !== 3)
-                {
-                	break;
-                }
-            case 3:
-                coord_parsed[coord_index] = parseUncertain(coord_parsed[coord_index],coordform.id.slice(0,3));
-
-				break;
-			default:
-				return false;
-		}
-	}
-
-	return true;
-
-}
-
 function parseVerifyCoord(targ_coord,cur_arm) {
 	//RegExp indicating coordinate begins with a redundant chromosome arm label
 	var re_apfx = new RegExp("^[2-3](L|R):");
@@ -133,12 +31,17 @@ function parseVerifyCoord(targ_coord,cur_arm) {
 	var lft = targ_coord.split(";")[0];
 	var rgt = targ_coord.split(";")[1];
 	var lft_most = lft.split("--")[0];
-	var rgt_most = rgt.split("--")[1];
+	if (rgt.split("--")[1] !== undefined) {
+		var rgt_most = rgt.split("--")[1];
+	}
+	else {
+		var rgt_most = rgt;
+	}
 
 	if (lft !== lft_most) {       //If there is a left-hand breakpoint
 		lft = lft.split("--")[1]; //Then take the right-hand part of the left coordinate
                                   //as the end of the lefthand uncertain breakpoint range
-		if (lft_most > lft) {
+		if (Number(lft_most) > Number(lft)) {
 			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
 			"<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>" +
 			format_alert);
@@ -153,11 +56,11 @@ function parseVerifyCoord(targ_coord,cur_arm) {
 	if (rgt !== rgt_most) {       //Likewise for the right-hand breakpoint
 		rgt = rgt.split("--")[0]; //except now take the left-hand part of the right coordinate
                                   //as the beginning of the righthand uncertain breakpoint range
-		if (rgt > rgt_most) {
+		if (Number(rgt) > Number(rgt_most)) {
 			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
 			"<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>" +
 			format_alert);
-	
+
 			return false;
 		}
 	}
@@ -165,7 +68,7 @@ function parseVerifyCoord(targ_coord,cur_arm) {
 		rgt_most = 0; //Indicates that there is no righthand uncertain breakpoint
 	}
 
-	if (lft > rgt) {          			
+	if (Number(lft) > Number(rgt)) {
 		displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
 		"<p>Coordinates must be typed left to right (lowest position to highest position).</p>" +
 		format_alert);
@@ -188,6 +91,28 @@ function parseVerifyCoord(targ_coord,cur_arm) {
 	};
 }
 
+function getInterval(coord,interval) {
+	if (interval === "largest") {
+		if (coord["lft_most"] !== 0) {
+			left = coord["lft_most"];
+		}
+		else {
+			left = coord["lft"];
+		}
+		if (coord["rgt_most"] !== 0) {
+			right = coord["rgt_most"];
+		}
+		else {
+			right = coord["rgt"];
+		}
+	}
+	else if (interval == "smallest") {
+		left = coord["lft"];
+		right = coord["rgt"];
+	}
+	return left + ";" + right;
+}
+
 function submitCoordinates(type) {
 	var coordform = preloaded[type + "_input"];
 
@@ -207,7 +132,15 @@ function submitCoordinates(type) {
 	}
 
 	var new_coords = coordform.value.trim().split(" ");
-	var cur_array = preloaded.dataset[cur_arm][cur_type];
+
+	//Removes whitespace between coordinate entries, which may result from copy-pasting data
+	new_coords = new_coords.filter(function(element) { if(element !== "") { return true; }});
+
+	var cur_array = preloaded.dataset[cur_arm][cur_type]["full"];
+	var passed_array = preloaded.dataset[cur_arm][cur_type]["passed"];
+	var rem_array = preloaded.dataset[cur_arm][cur_type]["pre_rem"];
+	var col_array = preloaded.dataset[cur_arm][cur_type]["pre_col"];
+	var validated = [];
 
 	//Removes whitespace between coordinate entries, which may result from copy-pasting data
 	new_coords = new_coords.filter(function(element) { if(element !== "") { return true; }});
@@ -215,38 +148,91 @@ function submitCoordinates(type) {
 	for (cur_coord in new_coords) {
 		var parsed_coord = parseVerifyCoord(new_coords[cur_coord],cur_arm);
 
-		
+		if (parsed_coord !== false) {
+			if (passed_array.indexOf(parsed_coord.str_id) === -1) {
+				validated.push(parsed_coord);
+			}
+		}
+		else {
+			return false;
+		}
+	}
+	
+	for (val_coord in validated) {
+		cur_array.push(validated[val_coord]);
+		passed_array.push(validated[val_coord]["str_id"]);
+		rem_array.push(getInterval(parsed_coord,"largest"));
 
-		if (unique) cur_array.push(parsed_coord);
+		if (cur_type === "sup" || cur_type == "enh") {
+			col_array.push(getInterval(parsed_coord,"largest"));
+		}
+		else if (cur_type == "ina") {
+			col_array.push(getInterval(parsed_coord,"smallest"));
+		}
 	}
 
-	buildListbox(form_choice);
+	var target_listbox = preloaded[type + "box"];
+
+	buildListbox(cur_arm,cur_type,target_listbox);
 	coordform.value = "";
-	
+
 	return true;
 }
 
-function deleteCoordinate(delform_choice,arrays_type) {
-	var delform = delform_choice;
+function deleteItem(targ_array,targ_item) {
+	delete targ_array[targ_array.indexOf(targ_item)];
+	fullsort(targ_array);
+	targ_array.pop;
+}
 
-	if(delform[delform.selectedIndex] === undefined) {
+function deleteCoordinate(type) {
+	var coordform = preloaded[type + "_input"];
+
+	if(coordform[coordform.selectedIndex] === undefined) {
 		return false;
 	}
 
-	var to_remove_name = delform[delform.selectedIndex].value;
-	var to_remove_arm = to_remove_name.slice(0,2);
-	var rem_array = arrays_type[all_arms.indexOf(to_remove_arm)];
+	var cur_array = preloaded.dataset[cur_arm][cur_type]["full"];
+	var passed_array = preloaded.dataset[cur_arm][cur_type]["passed"];
+	var rem_array = preloaded.dataset[cur_arm][cur_type]["pre_rem"];
+	var col_array = preloaded.dataset[cur_arm][cur_type]["pre_col"];
+	
+	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+	if (type === "act") {
+		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
+	}
+	else if (type ==="ina") {
+		var cur_type = type;
+	}
 
-	delete rem_array[rem_array.indexOf(to_remove_name.slice(3,to_remove_name.length))];
+	var to_remove = coordform[coordform.selectedIndex].value;
+	var to_remove_name = to_remove.slice(3,to_remove.length);
 
-	fullSort(rem_array);
-	rem_array.pop();
+	for (full_coord in cur_array) {
+		if (cur_array[full_coord]["str_id"] === "to_remove_name") {
+			var full_delete = cur_array[full_coord];
+			break;
+		}
+	}
 
-	buildListbox(all_arms.indexOf(to_remove_arm),delform);
+	var rem_delete = getInterval(parsed_coord,"largest");
 
-	preloaded.elim_textbox.value = "";
-	remaining_textbox.value = "";
-	collapse_textbox.value = "";
+	if (cur_type === "sup" || cur_type == "enh") {
+		var col_delete = getInterval(parsed_coord,"largest");
+	}
+	else if (cur_type == "ina") {
+		var col_delete = getInterval(parsed_coord,"smallest");
+	}
+
+	delete current_array[full_delete];
+	deleteItem(passed_array,to_remove_name);
+	deleteItem(rem_array,rem_delete);
+	deleteItem(col_array,col_delete);
+
+	buildListbox(cur_arm,cur_type,coordform);
+
+	preloaded.remaining_textbox.value = "";
+	preloaded.collapse_textbox.value = "";
 
 	return true;
 }

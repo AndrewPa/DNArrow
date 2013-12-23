@@ -14,6 +14,13 @@ function radioSelector(panel_name,button_label) {
 	states.prev_label = cur_label;
 	preloaded[button_label].removeAttribute("onclick");
 	preloaded[button_label].classList.add("choose-box-active");
+
+	if (button_label === "enh_toggle") {
+		preloaded.active_title.childNodes[0].nodeValue = "Enhancers";
+	}
+	else if (button_label === "sup_toggle") {
+		preloaded.active_title.childNodes[0].nodeValue = "Suppressors";
+	}
 }
 
 function clearListText(formchoice,array_type) {
@@ -126,16 +133,16 @@ function confirmClear(formchoice,array_type) {
 	$(".ui-dialog-titlebar-close").removeAttr("title");
 }
 
-function buildListbox() {
-	if(arguments[0]) {
-		target_listbox = [arguments[0]];
+function buildListbox(cur_arm,cur_type,target_listbox) {
+	if(arguments[2] !== undefined) {
+		//Framework: Allows any number of listboxes to be re-updated when passed as arguments
+		target_listbox = Array.prototype.slice.call(arguments,2,arguments.length);
 	}
 	else {
 		target_listbox = preloaded.all_boxes;
 	}
 	for(listbox in target_listbox) {
-		var array_type = array_types[preloaded.all_boxes.indexOf(target_listbox[listbox])];
-		var working_array = array_type[preloaded.armselect.selectedIndex];
+		var working_array = preloaded.dataset[cur_arm][cur_type]["passed"];
 		fullSort(working_array);
 
 		if(target_listbox[listbox].type === "select-one") {
@@ -145,8 +152,8 @@ function buildListbox() {
 					continue;
 				}
 				var newcoord = document.createElement('option');
-				newcoord.value = all_arms[preloaded.armselect.selectedIndex] + ":" + working_array[coord_index];
-				newcoord.text = all_arms[preloaded.armselect.selectedIndex] + ":" + working_array[coord_index];
+				newcoord.value = cur_arm + ":" + working_array[coord_index];
+				newcoord.text = cur_arm + ":" + working_array[coord_index];
 				target_listbox[listbox].add(newcoord, null);
 			}
 		}
@@ -160,41 +167,3 @@ function buildListbox() {
 	}
 	return true;
 }
-
-/*
-//Function Backup
-
-function buildListbox() {
-	if(arguments[0]) {
-		target_listbox = [arguments[0]];
-	}
-	else {
-		target_listbox = preloaded.all_boxes;
-	}
-	for(listbox in target_listbox) {
-		var array_type = array_types[preloaded.all_boxes.indexOf(target_listbox[listbox])];
-		var working_array = array_type[preloaded.armselect.selectedIndex];
-		fullSort(working_array);
-
-		if(target_listbox[listbox].type === "select-one") {
-			target_listbox[listbox].options.length = 0;
-			for(coord_index in working_array) {
-				if(working_array[coord_index] === " ") {
-					continue;
-				}
-				var newcoord = document.createElement('option');
-				newcoord.value = all_arms[preloaded.armselect.selectedIndex] + ":" + working_array[coord_index];
-				newcoord.text = all_arms[preloaded.armselect.selectedIndex] + ":" + working_array[coord_index];
-				target_listbox[listbox].add(newcoord, null);
-			}
-		}
-		else {
-			var result_text = "";
-			for(var i = 0; i < working_array.length; i++) {
-				result_text += working_array[i] + "\n";
-			}
-			target_listbox[listbox].value = result_text;
-		}
-	}
-	return true;
-}*/

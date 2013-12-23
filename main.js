@@ -2,8 +2,8 @@
 window.onload = function initQueryDOM() {
 	window.preloaded = {
 		//Initial DOM Query Items for Data/Results Display Boxes
-		supbox: document.getElementById("sup_coordslist"),
-		neubox: document.getElementById("neu_coordslist"),
+		actbox: document.getElementById("sup_coordslist"),
+		inabox: document.getElementById("neu_coordslist"),
 		collapse_textbox: document.getElementById("collapse_textbox"),
 		remaining_textbox: document.getElementById("remaining_textbox"),
 		elim_textbox: 0, //spacekeeper: will be fixed when converted to objects
@@ -13,10 +13,11 @@ window.onload = function initQueryDOM() {
 		ina_input: document.getElementById("ina_input"),
 		input_data: document.getElementsByClassName("input-data"),
 		arm_boxes: document.getElementsByClassName("arm-box"),
-		sup_enh_toggles: document.getElementsByClassName("sup-enh-toggle")
+		sup_enh_toggles: document.getElementsByClassName("sup-enh-toggle"),
+		active_title: document.getElementById("active_title")
 	};
 	window.preloaded.all_boxes = [
-		preloaded.supbox, preloaded.neubox, preloaded.elim_textbox, preloaded.collapse_textbox, preloaded.remaining_textbox
+		preloaded.actbox, preloaded.inabox, preloaded.collapse_textbox, preloaded.remaining_textbox
 	]; //TO DO: convert to objects
 	
 	//Items for Dynamic CSS Alterations
@@ -74,20 +75,36 @@ window.onload = function initQueryDOM() {
 		"3R": {}
 	};
 
-	window.preloaded.sub_dataset = {
-		sup: [], //Active regions: suppressors only
-		enh: [], //Active regions: enhancers only
-		ina: [], //All inactive regions
-		elm: [], //Results from "eliminateOverlaps"
-		rem: [], //Results from "computeRemaining"
-		col: []  //Results from "collapseCoords"
+	window.preloaded.sub_dataset = function() {
+		this.sup = {}; //Active regions: suppressors only
+		this.enh = {}; //Active regions: enhancers only
+		this.ina = {}; //All inactive regions
+		this.elm = []; //Results from "eliminateOverlaps"
+		this.rem = []; //Results from "computeRemaining"
+		this.col = [];  //Results from "collapseCoords"
 	};
 
-	for (s_dataset in window.preloaded.dataset) {
-		window.preloaded.dataset[s_dataset] = window.preloaded.sub_dataset;
+	window.preloaded.type_sub_dataset = function() {
+		this.full = [];
+		this.pre_rem = [];
+		this.pre_col = [];
+		this.passed = [];
 	};
-	
-	window.preloaded.
+
+	window.preloaded.input_types = ["sup","enh","ina"];
+
+	for (s_dataset in window.preloaded.dataset) {
+		window.preloaded.dataset[s_dataset] = new window.preloaded.sub_dataset;
+
+		for (t_s_dataset in window.preloaded.input_types) {
+			var ipt_type = window.preloaded.input_types[t_s_dataset];
+
+			window.preloaded.dataset[s_dataset][ipt_type] = new window.preloaded.type_sub_dataset;
+		};
+	};
+
+	clearListText(remaining_textbox);
+	clearListText(collapse_textbox);
 
 	return true;
 };
