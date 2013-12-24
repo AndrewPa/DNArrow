@@ -48,6 +48,13 @@ function parseVerifyCoord(targ_coord,cur_arm) {
 	
 			return false;
 		}
+		if (Number(lft_most) === Number(lft)) {
+			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
+			"<p>You cannot define a left breakpoint region of zero length.</p>" +
+			format_alert);
+
+			return false;
+		}
 	}
 	else {
 		lft_most = 0; //Indicates that there is no lefthand uncertain breakpoint
@@ -59,6 +66,13 @@ function parseVerifyCoord(targ_coord,cur_arm) {
 		if (Number(rgt) > Number(rgt_most)) {
 			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
 			"<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>" +
+			format_alert);
+
+			return false;
+		}
+		if (Number(rgt) === Number(rgt_most)) {
+			displayWarning("<p>One of your entries is invalid (" + targ_coord + ").</p>" +
+			"<p>You cannot define a right breakpoint region of zero length.</p>" +
 			format_alert);
 
 			return false;
@@ -124,6 +138,7 @@ function submitCoordinates(type) {
 	}
 
 	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+
 	if (type === "act") {
 		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
 	}
@@ -181,23 +196,20 @@ function submitCoordinates(type) {
 
 function deleteItem(targ_array,targ_item) {
 	delete targ_array[targ_array.indexOf(targ_item)];
-	fullsort(targ_array);
-	targ_array.pop;
+	fullSort(targ_array);
+	targ_array.pop();
 }
 
+//In lieu of an MVC framework, deleting coordinates manually is the inverse function of submitCoordinates()
 function deleteCoordinate(type) {
-	var coordform = preloaded[type + "_input"];
+	var coordform = preloaded[type + "box"];
 
 	if(coordform[coordform.selectedIndex] === undefined) {
 		return false;
 	}
 
-	var cur_array = preloaded.dataset[cur_arm][cur_type]["full"];
-	var passed_array = preloaded.dataset[cur_arm][cur_type]["passed"];
-	var rem_array = preloaded.dataset[cur_arm][cur_type]["pre_rem"];
-	var col_array = preloaded.dataset[cur_arm][cur_type]["pre_col"];
-	
 	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+
 	if (type === "act") {
 		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
 	}
@@ -205,29 +217,55 @@ function deleteCoordinate(type) {
 		var cur_type = type;
 	}
 
-	var to_remove = coordform[coordform.selectedIndex].value;
-	var to_remove_name = to_remove.slice(3,to_remove.length);
+	var cur_array = preloaded.dataset[cur_arm][cur_type]["full"];
+	var passed_array = preloaded.dataset[cur_arm][cur_type]["passed"];
+	var rem_array = preloaded.dataset[cur_arm][cur_type]["pre_rem"];
+	var col_array = preloaded.dataset[cur_arm][cur_type]["pre_col"];
+	var to_remove_name = coordform[coordform.selectedIndex].value;
 
 	for (full_coord in cur_array) {
-		if (cur_array[full_coord]["str_id"] === "to_remove_name") {
+		if (cur_array[full_coord]["str_id"] === to_remove_name) {
 			var full_delete = cur_array[full_coord];
 			break;
 		}
 	}
 
-	var rem_delete = getInterval(parsed_coord,"largest");
+	var rem_delete = getInterval(full_delete,"largest");
 
 	if (cur_type === "sup" || cur_type == "enh") {
-		var col_delete = getInterval(parsed_coord,"largest");
+		var col_delete = rem_delete.slice();
 	}
 	else if (cur_type == "ina") {
-		var col_delete = getInterval(parsed_coord,"smallest");
+		var col_delete = getInterval(full_delete,"smallest");
 	}
 
-	delete current_array[full_delete];
+	deleteItem(cur_array,full_delete);
 	deleteItem(passed_array,to_remove_name);
 	deleteItem(rem_array,rem_delete);
 	deleteItem(col_array,col_delete);
+
+	buildListbox(cur_arm,cur_type,coordform);
+
+	preloaded.remaining_textbox.value = "";
+	preloaded.collapse_textbox.value = "";
+
+	return true;
+}
+
+function deleteAllInput(type) {
+	if(type === "enh" || type === "sup") {
+		var coordform = preloaded["actbox"];
+	}
+	else if (type === "ina") {
+		var coordform = preloaded["inabox"];
+	}
+	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+	var cur_type = type;
+
+	preloaded.dataset[cur_arm][cur_type]["full"] = [];
+	preloaded.dataset[cur_arm][cur_type]["passed"] = [];
+	preloaded.dataset[cur_arm][cur_type]["pre_rem"] = [];
+	preloaded.dataset[cur_arm][cur_type]["pre_col"] = [];
 
 	buildListbox(cur_arm,cur_type,coordform);
 

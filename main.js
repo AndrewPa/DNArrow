@@ -103,8 +103,8 @@ window.onload = function initQueryDOM() {
 		};
 	};
 
-	clearListText(remaining_textbox);
-	clearListText(collapse_textbox);
+	preloaded.remaining_textbox.value = "";
+	preloaded.collapse_textbox.value = "";
 
 	return true;
 };

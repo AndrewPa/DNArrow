@@ -1,39 +1,41 @@
-//single-instance class containing all coordinate handling code
-
 function fullSort(a) {	//modified sort function sorts numerically (ascending) by first endpoint then second endpoint
 	a.sort(function(a, b) {
 		if(a.split(";")[0] - b.split(";")[0] !== 0) { 
 			return a.split(";")[0] - b.split(";")[0]; 
-		} else {
+		}
+		else {
 			return a.split(";")[1] - b.split(";")[1]; 
 		}
 	});
 	return a;
 }
 
+//single-instance class containing all coordinate handling code
 var AllAlgorithms = new (function() {
-	this.eliminateOverlaps = function (chrom_length, tested_regions) { //Removes inactive regions from active ones; output becomes input of Hotspots and Collapse.
+	this.eliminateOverlaps = function (chrom_length, tested_regions) {
+		//Removes inactive regions from active ones; output becomes input of Hotspots and Collapse.
 		if(!chrom_length && !tested_regions) {
-			this.chrom_arm = this.getChromArm();
+			this.chrom_arm = button_states.arm_panel.prev_label.substr(8,9);
 			this.clearSolutions();
 			var solutions = this.solutions[this.chrom_arm];
-			var target_sups = this.coordinates[0][this.chrom_arm].slice(0);
+			var target_acts = this.coordinates[0][this.chrom_arm].slice(0);
 			var target_neus = this.coordinates[1][this.chrom_arm].slice(0);
-		} else {
+		}
+		else {
 			var return_output = true;
 			var solutions = [];
-			var target_sups = ["1;" + chrom_length];
+			var target_acts = ["1;" + chrom_length];
 			var target_neus = tested_regions;
 		} //allows function to be used generically; needed by dnarrow_remaining.js
 
 		var does_overlap_right = 0; //Optimization; skips proceeding regions known not to overlap on 'right-hand' side
 		var supcount = 0;
 
-		fullSort(target_sups); //sorting needed for optimization
+		fullSort(target_acts); //sorting needed for optimization
 		fullSort(target_neus);
 
-		while(supcount < target_sups.length) { //array length needs to be re-evaluated every pass
-			var supcoord_full = target_sups[supcount];
+		while(supcount < target_acts.length) { //array length needs to be re-evaluated every pass
+			var supcoord_full = target_acts[supcount];
 			var supcoord_left = Number(supcoord_full.split(";")[0]);
 			var supcoord_right = Number(supcoord_full.split(";")[1]);
 			var did_overlap_right = 0;
@@ -84,11 +86,11 @@ var AllAlgorithms = new (function() {
 					supcoord_full = narrowsup_left + ";" + narrowsup_right;
 
 					if(narrow_left_left !== 0) {
-						target_sups.push(narrow_left_left + ";" + narrow_left_right);
-						target_sups.push(narrow_right_left + ";" + narrow_right_right);
-						target_sups[supcount] = undefined;
-						fullSort(target_sups);
-						target_sups.pop();
+						target_acts.push(narrow_left_left + ";" + narrow_left_right);
+						target_acts.push(narrow_right_left + ";" + narrow_right_right);
+						target_acts[supcount] = undefined;
+						fullSort(target_acts);
+						target_acts.pop();
 
 						supcoord_full = "";
 						supcount -= 1;
@@ -102,7 +104,7 @@ var AllAlgorithms = new (function() {
 						}
 					}
 				}
-
+//&& supcoord_full !== "DNE;DNE"
 				if(supcoord_full !== "" && solutions.indexOf(supcoord_full) === -1) {
 					solutions.push(supcoord_full);
 				}
@@ -122,7 +124,7 @@ var AllAlgorithms = new (function() {
 	this.collapseCoords = function(coords) {
 		neweliminate.algorithm();
 		if(!coords) {
-			this.chrom_arm = this.getChromArm();
+			this.chrom_arm = button_states.arm_panel.prev_label.substr(8,9);
 			this.clearSolutions();
 			var solutions = this.solutions[this.chrom_arm];
 			var coords = this.coordinates[0][this.chrom_arm];
@@ -187,7 +189,7 @@ var AllAlgorithms = new (function() {
 	};
 
 	this.computeRemaining = function() {
-		this.chrom_arm = this.getChromArm();
+		this.chrom_arm = button_states.arm_panel.prev_label.substr(8,9);
 		this.clearSolutions();
 		var coords = this.coordinates[0][this.chrom_arm].concat(this.coordinates[1][this.chrom_arm]); //merge all inputed coordinates into one array
 		var chrom_sizes = [23011546, 21146710, 24543559, 27905055]; //from character count of raw Dmel genome files from flybase.net

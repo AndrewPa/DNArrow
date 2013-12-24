@@ -122,7 +122,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 		<!--My Scripts-->
 		<link rel="stylesheet" type="text/css" href="css/dnarrow-layout.css" media="screen" />
 		<script type="text/javascript" src="main.js"></script>
-		<script type="text/javascript" src="input_parsing.js"></script>
+		<script type="text/javascript" src="input_data_controls.js"></script>
 		<script type="text/javascript" src="display_controls.js"></script>
 		<script type="text/javascript" src="all_algorithms.js"></script>
 		<!--<script type="text/javascript" src="algorithm_class.js"></script>-->
@@ -132,10 +132,8 @@ $JSON_data = JSON_encode($pre_JSON_data);
 			<h2>DNArrow 2.1</h2>
 			<h5>(c) Andrew Papadopoli 2014
 			<h4>
-				Please enter your coordinates or load them from the lab database. 
 				<a class="ins-link" onclick="showInstructions();">See detailed instructions here.</a>
 			</h4>
-			<h4>Select chromosome arm and result type to analyze:</h4>
 			<h4>
 				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_2L')">
 					<span class="choose-box-label arm-box-label">2L</span>
@@ -172,33 +170,33 @@ $JSON_data = JSON_encode($pre_JSON_data);
 			<div id="sup_data_group" class="data-group">
 				<div class="title-bar">
 					<span id="active_title" class="title-bar-text">Active</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.supbox,sup_arrays);" role="button" aria-disabled="false" title="Clear All">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('act');" role="button" aria-disabled="false" title="Clear All">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
 				<div class="input-data">
 					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('act'));"></select>
-					<input id="act_input" type="text" placeholder="e.g.: 100;200 200;300" 
+					<input id="act_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
 					onkeypress="if(event.keyCode==13)(submitCoordinates('act'));">
 				</div>
 			</div>
 			<div id="neu_data_group" class="data-group">
 				<div class="title-bar">
 					<span class="title-bar-text">Inactive</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.neubox,neu_arrays);" role="button" aria-disabled="false" title="Clear All">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('ina');" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
 				<div class="input-data">
 					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('ina'));"></select>
-					<input id="ina_input" type="text" placeholder="e.g.: 100;200 200;300" 
+					<input id="ina_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
 					onkeypress="if(event.keyCode==13)(submitCoordinates('ina'));">
 				</div>
 			</div>
 			<div id="rem_data_group" class="data-group">
 				<div class="title-bar">
 					<span class="title-bar-text">Remaining</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.remaining_textbox);" role="button" aria-disabled="false" title="Clear All">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('rem');" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>
@@ -212,7 +210,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 			<div id="col_data_group" class="data-group">
 				<div class="title-bar">
 					<span class="title-bar-text">Collapse</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear(preloaded.collapse_textbox);" role="button" aria-disabled="false" title="Clear All">
+					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('col');" role="button" aria-disabled="false" title="Clear All">
     					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
 					</button>
 				</div>

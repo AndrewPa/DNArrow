@@ -1,8 +1,5 @@
-//a constructor for all functions that handle coordinate data
+//A constructor for all functions that handle coordinate data
 function AlgorithmFactory(solutions_array, coordinates, algorithm) {
-	this.getChromArm = function() { 
-		return document.getElementById('chrom_arm').selectedIndex;
-	}; //method to query DOM for chromosome selected by user
 	this.clearSolutions = function() { 
 		solutions_array[this.chrom_arm] = []; 
 	}; //method to clear the solutions found on a previous function call 

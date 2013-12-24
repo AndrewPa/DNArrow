@@ -17,7 +17,7 @@ html {
 }
 body {
 	background-color: #A985C8;
-	min-width: 400px;
+	min-width: 350px;
 	text-align: center;
 }
 .topbar {
@@ -74,14 +74,14 @@ a.ins-link:hover {
 .appspace {
 	background-color: #8D6AAA;
 	padding: 10px;
-	max-width: 610px;
+	max-width: 940px;
 	display: inline-block;
 }
 .data-group {
 	background-color: #7D52A5;
 	padding: 10px;
-	width: 180px;
-	height: 270px;
+	width: 290px;
+	height: 290px;
 	float: left;
 }
 #sup_data_group, #neu_data_group {
@@ -108,7 +108,7 @@ a.ins-link:hover {
 	
 }
 input {
-	width: 160px;
+	width: 270px;
 	display: block;
 }
 input:hover,input:focus,input.input-focus {
@@ -156,18 +156,20 @@ button.algorithm {
 	margin-top: 5px;
 }
 select.listbox {
-	height: 200px;
-	width: 160px;
+	width: 270px;
+	height: 225px;
+	font: 10pt arial, sans-serif;
 }
 textarea {
 	resize: none;
-	width: 160px;
-	height: 200px;
+	width: 270px;
+	height: 225px;
 	display: block;
+	font: 10pt arial, sans-serif;
 }
-@media (max-width: 680px) {
+@media (max-width: 1000px) {
 	.appspace {
-		max-width: 405px;
+		max-width: 625px;
 	}
 	#neu_data_group {
 		margin-right: 0px;
@@ -177,9 +179,9 @@ textarea {
 		margin-right: 5px;
 	}
 }
-@media (max-width: 460px) {
+@media (max-width: 680px) {
 	.appspace {
-		max-width: 200px;
+		max-width: 310px;
 	}
 	.data-group {
 		margin-right: 0px;

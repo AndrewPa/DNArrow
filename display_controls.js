@@ -23,13 +23,16 @@ function radioSelector(panel_name,button_label) {
 	}
 }
 
-function clearListText(formchoice,array_type) {
-	if(array_type == null) {
-		formchoice.value = "";
+//Results from algorithms are not currently stored, so the display textarea is simply cleared
+function fullDeleteClear(type) {
+	if(type === 'rem') {
+		preloaded.remaining_textbox.value = "";
 	}
-	else {
-		formchoice.options.length = 0;
-		array_type[preloaded.armselect.selectedIndex] = [];
+	else if(type === 'col') {
+		preloaded.collapse_textbox.value = "";
+	}
+	else if(type === 'sup' || type === 'enh' || type === 'ina') {
+		deleteAllInput(type);
 	}
 }
 
@@ -47,7 +50,7 @@ function showInstructions() {
 			"<p>" +
 				"Please ensure that left and right bounds are separated by a semicolon (;) " +
 				"and that only <em>spaces</em> separate each region. When ready to submit, " +
-				"press enter on your keyboard. You may delete any single coordinate from either " +
+				"press enter on your keyboard. You may <strong>delete</strong> any single coordinate from either " +
 				"of the two input boxes by selecting them and pressing the delete key on your keyboard." +
 			"</p>"
 	);
@@ -98,22 +101,20 @@ function displayWarning(message) {
 	});
 }
 
-function confirmClear(formchoice,array_type) {
-	var message = "";
+function confirmClear(type) {
+	if (type === "act") {
+		var type = button_states.e_s_panel.prev_label.substr(0,3);
+	}
 
-	if(formchoice === preloaded.supbox) { //TO DO: Convert ELIF tree to associative array
-		message = "active region coordinates?";
-	}
-	else if(formchoice === preloaded.neubox) {
-		message = "inactive region coordinates?";
-	}
-	else if(formchoice === preloaded.remaining_textbox) {
-		message = "results from Remaining?";
-	}
-	else if(formchoice === preloaded.collapse_textbox) {
-		message = "results from Collapse?";
-	}
-	$( "#dialog-confirm" ).text("Clear all " + message);
+	messages = {
+		sup: "suppressor region coordinates?",
+		enh: "enhancer region coordinates?",
+		ina: "inactive region coordinates?",
+		rem: "results from Remaining?",
+		col: "results from Collapse?"
+	};
+
+	$( "#dialog-confirm" ).text("Clear all " + messages[type]);
 	$( "#dialog-confirm" ).dialog({
 		resizable: false,
 		height: 140,
@@ -123,7 +124,7 @@ function confirmClear(formchoice,array_type) {
 		buttons: {
 			"Clear All": function() {
 				$( this ).dialog( "close" );
-				clearListText(formchoice,array_type);
+				fullDeleteClear(type);
 			},
 			Cancel: function() {
 				$( this ).dialog( "close" );
@@ -152,8 +153,8 @@ function buildListbox(cur_arm,cur_type,target_listbox) {
 					continue;
 				}
 				var newcoord = document.createElement('option');
-				newcoord.value = cur_arm + ":" + working_array[coord_index];
-				newcoord.text = cur_arm + ":" + working_array[coord_index];
+				newcoord.value = working_array[coord_index];
+				newcoord.text = working_array[coord_index];
 				target_listbox[listbox].add(newcoord, null);
 			}
 		}
