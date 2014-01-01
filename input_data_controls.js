@@ -176,13 +176,13 @@ function submitCoordinates(type) {
 	for (val_coord in validated) {
 		cur_array.push(validated[val_coord]);
 		passed_array.push(validated[val_coord]["str_id"]);
-		rem_array.push(getInterval(parsed_coord,"largest"));
+		rem_array.push(getInterval(validated[val_coord],"largest"));
 
 		if (cur_type === "sup" || cur_type == "enh") {
-			col_array.push(getInterval(parsed_coord,"largest"));
+			col_array.push(getInterval(validated[val_coord],"largest"));
 		}
 		else if (cur_type == "ina") {
-			col_array.push(getInterval(parsed_coord,"smallest"));
+			col_array.push(getInterval(validated[val_coord],"smallest"));
 		}
 	}
 
@@ -196,7 +196,7 @@ function submitCoordinates(type) {
 
 function deleteItem(targ_array,targ_item) {
 	delete targ_array[targ_array.indexOf(targ_item)];
-	fullSort(targ_array);
+	targ_array.sort();
 	targ_array.pop();
 }
 
@@ -213,7 +213,7 @@ function deleteCoordinate(type) {
 	if (type === "act") {
 		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
 	}
-	else if (type ==="ina") {
+	else if (type === "ina") {
 		var cur_type = type;
 	}
 
@@ -235,7 +235,7 @@ function deleteCoordinate(type) {
 	if (cur_type === "sup" || cur_type == "enh") {
 		var col_delete = rem_delete.slice();
 	}
-	else if (cur_type == "ina") {
+	else if (cur_type === "ina") {
 		var col_delete = getInterval(full_delete,"smallest");
 	}
 

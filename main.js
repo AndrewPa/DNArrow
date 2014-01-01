@@ -14,7 +14,14 @@ window.onload = function initQueryDOM() {
 		input_data: document.getElementsByClassName("input-data"),
 		arm_boxes: document.getElementsByClassName("arm-box"),
 		sup_enh_toggles: document.getElementsByClassName("sup-enh-toggle"),
-		active_title: document.getElementById("active_title")
+		active_title: document.getElementById("active_title"),
+		//sizes are from character count of raw Dmel genome files from flybase.net
+		chrom_sizes: {
+			"2L": 23011546, 
+			"2R": 21146710,
+			"3L": 24543559,
+			"3R": 27905055
+		}
 	};
 	window.preloaded.all_boxes = [
 		preloaded.actbox, preloaded.inabox, preloaded.collapse_textbox, preloaded.remaining_textbox
@@ -64,8 +71,8 @@ window.onload = function initQueryDOM() {
 	};
 
 	//Default selections
-	radioSelector('arm_panel','arm_box_2L');
-	radioSelector('e_s_panel','enh_toggle');
+	radioSelector('arm_panel','arm_box_2L',true);
+	radioSelector('e_s_panel','enh_toggle',true);
 
 	//New data structure scaffold
 	window.preloaded.dataset = {
@@ -79,9 +86,7 @@ window.onload = function initQueryDOM() {
 		this.sup = {}; //Active regions: suppressors only
 		this.enh = {}; //Active regions: enhancers only
 		this.ina = {}; //All inactive regions
-		this.elm = []; //Results from "eliminateOverlaps"
 		this.rem = []; //Results from "computeRemaining"
-		this.col = [];  //Results from "collapseCoords"
 	};
 
 	window.preloaded.type_sub_dataset = function() {
@@ -100,6 +105,11 @@ window.onload = function initQueryDOM() {
 			var ipt_type = window.preloaded.input_types[t_s_dataset];
 
 			window.preloaded.dataset[s_dataset][ipt_type] = new window.preloaded.type_sub_dataset;
+
+			if (ipt_type !== "ina") {
+				window.preloaded.dataset[s_dataset][ipt_type]["elm"] = []; //Results from "eliminateOverlaps"
+				window.preloaded.dataset[s_dataset][ipt_type]["col"] = []; //Results from "collapseCoords"
+			}
 		};
 	};
 

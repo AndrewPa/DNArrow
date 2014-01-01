@@ -1,4 +1,4 @@
-function radioSelector(panel_name,button_label) {
+function radioSelector(panel_name,button_label,init) {
 	/*
 	 * Controls display of light colored border around Arm Selection Boxes
 	 * Deletes and re-applies 'onclick' attribute to selected boxes to prevent 
@@ -21,9 +21,17 @@ function radioSelector(panel_name,button_label) {
 	else if (button_label === "sup_toggle") {
 		preloaded.active_title.childNodes[0].nodeValue = "Suppressors";
 	}
+
+	//The 'init' argument specifies if the function is being called at startup
+	if (init === undefined) {
+		var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
+
+		buildListbox(cur_arm,cur_type);
+	}
 }
 
-//Results from algorithms are not currently stored, so the display textarea is simply cleared
+//Results from displayed algorithms are simply displayed, so only the display textarea is cleared
 function fullDeleteClear(type) {
 	if(type === 'rem') {
 		preloaded.remaining_textbox.value = "";
@@ -143,10 +151,9 @@ function buildListbox(cur_arm,cur_type,target_listbox) {
 		target_listbox = preloaded.all_boxes;
 	}
 	for(listbox in target_listbox) {
-		var working_array = preloaded.dataset[cur_arm][cur_type]["passed"];
-		fullSort(working_array);
-
 		if(target_listbox[listbox].type === "select-one") {
+			var working_array = preloaded.dataset[cur_arm][cur_type]["passed"];
+			//fullSort(working_array); Need to parse uncertain breakpoints with new data structure
 			target_listbox[listbox].options.length = 0;
 			for(coord_index in working_array) {
 				if(working_array[coord_index] === " ") {
@@ -159,6 +166,13 @@ function buildListbox(cur_arm,cur_type,target_listbox) {
 			}
 		}
 		else {
+			if (target_listbox[listbox] === preloaded.all_boxes[2]) {
+				var working_array = preloaded.dataset[cur_arm][cur_type]["col"];	
+			}
+			else if (target_listbox[listbox] === preloaded.all_boxes[3]) {
+				var working_array = preloaded.dataset[cur_arm]["rem"];	
+			}
+			fullSort(working_array);
 			var result_text = "";
 			for(var i = 0; i < working_array.length; i++) {
 				result_text += working_array[i] + "\n";

@@ -202,7 +202,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 				</div>
 				<div class="input-data">
 					<textarea id="remaining_textbox"></textarea>
-					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="newremaining.algorithm();" role="button" aria-disabled="false" title="Run Algorithm">
+					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.computeRemaining();" role="button" aria-disabled="false" title="Run Algorithm">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
 					</button>
 				</div>
@@ -216,7 +216,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 				</div>
 				<div class="input-data results">
 					<textarea id="collapse_textbox"></textarea>
-					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="newcollapse.algorithm();" role="button" aria-disabled="false" title="Run Algorithm">
+					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.collapseCoords();" role="button" aria-disabled="false" title="Run Algorithm">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
 					</button>
 				</div>

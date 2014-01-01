@@ -15,24 +15,25 @@ var AllAlgorithms = new (function() {
 	this.eliminateOverlaps = function (chrom_length, tested_regions) {
 		//Removes inactive regions from active ones; output becomes input of Hotspots and Collapse.
 		if(!chrom_length && !tested_regions) {
-			this.chrom_arm = button_states.arm_panel.prev_label.substr(8,9);
-			this.clearSolutions();
-			var solutions = this.solutions[this.chrom_arm];
-			var target_acts = this.coordinates[0][this.chrom_arm].slice(0);
-			var target_neus = this.coordinates[1][this.chrom_arm].slice(0);
+			var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+			var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
+			preloaded.dataset[cur_arm][cur_type]["elm"] = [];
+			var solutions = preloaded.dataset[cur_arm][cur_type]["elm"];
+			var target_acts = preloaded.dataset[cur_arm][cur_type]["pre_col"].slice(0);
+			var target_inas = preloaded.dataset[cur_arm]["ina"]["pre_col"].slice(0);
 		}
 		else {
 			var return_output = true;
 			var solutions = [];
 			var target_acts = ["1;" + chrom_length];
-			var target_neus = tested_regions;
+			var target_inas = tested_regions;
 		} //allows function to be used generically; needed by dnarrow_remaining.js
 
 		var does_overlap_right = 0; //Optimization; skips proceeding regions known not to overlap on 'right-hand' side
 		var supcount = 0;
 
 		fullSort(target_acts); //sorting needed for optimization
-		fullSort(target_neus);
+		fullSort(target_inas);
 
 		while(supcount < target_acts.length) { //array length needs to be re-evaluated every pass
 			var supcoord_full = target_acts[supcount];
@@ -43,8 +44,8 @@ var AllAlgorithms = new (function() {
 			var narrowsup_right = supcoord_right;
 			var neucount = 0; //here and 'neucount - 1' below are 'left-hand' optimizations
 
-			for(neucount - 1; neucount < target_neus.length; neucount++) {
-				var neucoord_full = target_neus[neucount];
+			for(neucount - 1; neucount < target_inas.length; neucount++) {
+				var neucoord_full = target_inas[neucount];
 				var neucoord_left = Number(neucoord_full.split(";")[0]);
 				var neucoord_right = Number(neucoord_full.split(";")[1]);
 				var test1 = false;
@@ -104,8 +105,7 @@ var AllAlgorithms = new (function() {
 						}
 					}
 				}
-//&& supcoord_full !== "DNE;DNE"
-				if(supcoord_full !== "" && solutions.indexOf(supcoord_full) === -1) {
+				if(supcoord_full !== "" && solutions.indexOf(supcoord_full) === -1 && supcoord_full !== "DNE;DNE") {
 					solutions.push(supcoord_full);
 				}
 
@@ -122,15 +122,18 @@ var AllAlgorithms = new (function() {
 	};
 
 	this.collapseCoords = function(coords) {
-		neweliminate.algorithm();
 		if(!coords) {
-			this.chrom_arm = button_states.arm_panel.prev_label.substr(8,9);
-			this.clearSolutions();
-			var solutions = this.solutions[this.chrom_arm];
-			var coords = this.coordinates[0][this.chrom_arm];
-		} else if(!coords[0]) {
+			this.eliminateOverlaps();
+			var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+			var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
+			preloaded.dataset[cur_arm][cur_type]["col"] = [];
+			var solutions = preloaded.dataset[cur_arm][cur_type]["col"];
+			var coords = preloaded.dataset[cur_arm][cur_type]["elm"];
+		} 
+		else if(!coords[0]) {
 			return false; //coords passed but no data was entered by user; do nothing, possibly generate alert
-		} else {
+		} 
+		else {
 			var return_output = true;
 			var solutions = []; 
 		} //allows function to be used generically; needed by dnarrow_remaining.js
@@ -184,23 +187,28 @@ var AllAlgorithms = new (function() {
 			return solutions;
 		}
 
-		buildListbox(preloaded.collapse_textbox);
+		buildListbox(cur_arm,cur_type,preloaded.collapse_textbox);
 		return true;
 	};
 
 	this.computeRemaining = function() {
-		this.chrom_arm = button_states.arm_panel.prev_label.substr(8,9);
-		this.clearSolutions();
-		var coords = this.coordinates[0][this.chrom_arm].concat(this.coordinates[1][this.chrom_arm]); //merge all inputed coordinates into one array
-		var chrom_sizes = [23011546, 21146710, 24543559, 27905055]; //from character count of raw Dmel genome files from flybase.net
-		var num_bases = chrom_sizes[this.chrom_arm];
-		var covered_regions = newcollapse.algorithm(coords); //merge all inputed coordinates into easily managed, non-overlapping regions
+		var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+		preloaded.dataset[cur_arm]["rem"] = [];
+		var coords = [];
+
+		for (input_type in preloaded.input_types) {
+			coords = coords.concat(preloaded.dataset[cur_arm][preloaded.input_types[input_type]]["pre_rem"]); //merge all inputed coordinates into one array
+		}
+
+		var num_bases = preloaded.chrom_sizes[cur_arm];
+		var covered_regions = this.collapseCoords(coords); //merge all inputed coordinates into easily managed, non-overlapping regions
 
 		if(!covered_regions) {
 			covered_regions = [];
 		}
-			remaining_arrays[this.chrom_arm] = neweliminate.algorithm(num_bases, covered_regions); //then take those regions as 'neus' and the whole chromosome as a 'sup'	
-			buildListbox(preloaded.remaining_textbox);
+			//then finally, take those regions as 'inas' and the whole chromosome as a 'act'
+			preloaded.dataset[cur_arm]["rem"] = this.eliminateOverlaps(num_bases, covered_regions);
+			buildListbox(cur_arm,"rem",preloaded.remaining_textbox);
 			return true;
 	};
 })();
