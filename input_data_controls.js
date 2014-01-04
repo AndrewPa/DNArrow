@@ -186,9 +186,14 @@ function submitCoordinates(type) {
 		}
 	}
 
-	var target_listbox = preloaded[type + "box"];
+	if (type === "act") { 
+		coordform_index = 0;
+	}
+	else if (type === "ina") {
+		coordform_index = 1;
+	}
+	buildListbox(coordform_index); //Index of input display box
 
-	buildListbox(cur_arm,cur_type,target_listbox);
 	coordform.value = "";
 
 	return true;
@@ -244,7 +249,13 @@ function deleteCoordinate(type) {
 	deleteItem(rem_array,rem_delete);
 	deleteItem(col_array,col_delete);
 
-	buildListbox(cur_arm,cur_type,coordform);
+	if (type === "act") { 
+		coordform_index = 0;
+	}
+	else if (type === "ina") {
+		coordform_index = 1;
+	}
+	buildListbox(coordform_index); //Index of input display box
 
 	preloaded.remaining_textbox.value = "";
 	preloaded.collapse_textbox.value = "";
@@ -267,7 +278,13 @@ function deleteAllInput(type) {
 	preloaded.dataset[cur_arm][cur_type]["pre_rem"] = [];
 	preloaded.dataset[cur_arm][cur_type]["pre_col"] = [];
 
-	buildListbox(cur_arm,cur_type,coordform);
+	if (type === "act") { 
+		coordform_index = 0;
+	}
+	else if (type === "ina") {
+		coordform_index = 1;
+	}
+	buildListbox(coordform_index); //Index of input display box
 
 	preloaded.remaining_textbox.value = "";
 	preloaded.collapse_textbox.value = "";

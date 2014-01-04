@@ -27,7 +27,7 @@ function radioSelector(panel_name,button_label,init) {
 		var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
 		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
 
-		buildListbox(cur_arm,cur_type);
+		buildListbox();
 	}
 }
 
@@ -142,43 +142,76 @@ function confirmClear(type) {
 	$(".ui-dialog-titlebar-close").removeAttr("title");
 }
 
-function buildListbox(cur_arm,cur_type,target_listbox) {
-	if(arguments[2] !== undefined) {
-		//Framework: Allows any number of listboxes to be re-updated when passed as arguments
-		target_listbox = Array.prototype.slice.call(arguments,2,arguments.length);
+function buildSelect(display_index) {
+	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+	var boxtype = window.preloaded.displays[display_index];
+
+	if (display_index === 0) {
+		var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
 	}
-	else {
-		target_listbox = preloaded.all_boxes;
+	else if (display_index === 1) {
+		var cur_type = "ina";
 	}
-	for(listbox in target_listbox) {
-		if(target_listbox[listbox].type === "select-one") {
-			var working_array = preloaded.dataset[cur_arm][cur_type]["passed"];
-			//fullSort(working_array); Need to parse uncertain breakpoints with new data structure
-			target_listbox[listbox].options.length = 0;
-			for(coord_index in working_array) {
-				if(working_array[coord_index] === " ") {
-					continue;
-				}
-				var newcoord = document.createElement('option');
-				newcoord.value = working_array[coord_index];
-				newcoord.text = working_array[coord_index];
-				target_listbox[listbox].add(newcoord, null);
-			}
+
+	var working_array = preloaded.dataset[cur_arm][cur_type]["passed"];
+	boxtype.options.length = 0;
+	for(coord_index in working_array) {
+		if(working_array[coord_index] === " ") {
+			continue;
 		}
-		else {
-			if (target_listbox[listbox] === preloaded.all_boxes[2]) {
-				var working_array = preloaded.dataset[cur_arm][cur_type]["col"];	
-			}
-			else if (target_listbox[listbox] === preloaded.all_boxes[3]) {
-				var working_array = preloaded.dataset[cur_arm]["rem"];	
-			}
-			fullSort(working_array);
-			var result_text = "";
-			for(var i = 0; i < working_array.length; i++) {
-				result_text += working_array[i] + "\n";
-			}
-			target_listbox[listbox].value = result_text;
-		}
+		var newcoord = document.createElement('option');
+		newcoord.value = working_array[coord_index];
+		newcoord.text = working_array[coord_index];
+		boxtype.add(newcoord, null);
 	}
-	return true;
+}
+
+function buildTextarea(display_index) {
+	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+	var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
+	var boxtype = window.preloaded.displays[display_index];
+
+	if (display_index === 2) {
+		var working_array = preloaded.dataset[cur_arm]["rem"];	
+	}
+	else if (display_index === 3) {
+		var working_array = preloaded.dataset[cur_arm][cur_type]["col"];
+	}
+
+	var result_text = "";
+	for(var i = 0; i < working_array.length; i++) {
+		result_text += working_array[i] + "\n";
+	}
+	boxtype.value = result_text;
+}
+
+function buildListbox(display_index) {
+	//With no arguments, this function displays data in all display boxes
+	if (arguments[0] === undefined) {
+		var build_all = true;
+		display_index = 0;
+	}
+
+	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+	var cur_type = button_states.e_s_panel.prev_label.substr(0,3);
+
+	switch(display_index) {
+		case 0: //Active inputs
+  			buildSelect(0);
+  			if(build_all === undefined) { break; }
+		case 1: //Inactive inputs
+			buildSelect(1);
+			if(build_all === undefined) { break; }
+		case 2: //Remaining results
+			buildTextarea(2);
+			if(build_all === undefined) { break; }
+		case 3: //Collapse results
+			buildTextarea(3);
+			if(build_all === undefined) { break; }
+		default:
+			if ([0,1,2,3].indexOf(display_index) !== -1) { 
+				return true; 
+			}
+		return false;
+	}
 }

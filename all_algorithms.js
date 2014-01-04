@@ -187,7 +187,7 @@ var AllAlgorithms = new (function() {
 			return solutions;
 		}
 
-		buildListbox(cur_arm,cur_type,preloaded.collapse_textbox);
+		buildListbox(3); //Index of Collapse display box
 		return true;
 	};
 
@@ -208,7 +208,7 @@ var AllAlgorithms = new (function() {
 		}
 			//then finally, take those regions as 'inas' and the whole chromosome as a 'act'
 			preloaded.dataset[cur_arm]["rem"] = this.eliminateOverlaps(num_bases, covered_regions);
-			buildListbox(cur_arm,"rem",preloaded.remaining_textbox);
+			buildListbox(2); //Index of Remaining display box
 			return true;
 	};
 })();

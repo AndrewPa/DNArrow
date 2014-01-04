@@ -2,11 +2,7 @@
 window.onload = function initQueryDOM() {
 	window.preloaded = {
 		//Initial DOM Query Items for Data/Results Display Boxes
-		actbox: document.getElementById("sup_coordslist"),
-		inabox: document.getElementById("neu_coordslist"),
-		collapse_textbox: document.getElementById("collapse_textbox"),
-		remaining_textbox: document.getElementById("remaining_textbox"),
-		elim_textbox: 0, //spacekeeper: will be fixed when converted to objects
+		displays: document.getElementsByClassName("displaybox"),
 		armselect: document.getElementById('chrom_arm'),
 		//Initial DOM Query Items for Dynamic CSS Alterations
 		act_input: document.getElementById("act_input"),
@@ -23,10 +19,12 @@ window.onload = function initQueryDOM() {
 			"3R": 27905055
 		}
 	};
-	window.preloaded.all_boxes = [
-		preloaded.actbox, preloaded.inabox, preloaded.collapse_textbox, preloaded.remaining_textbox
-	]; //TO DO: convert to objects
-	
+
+	window.preloaded.actbox = window.preloaded.displays[0];
+	window.preloaded.inabox = window.preloaded.displays[1];
+	window.preloaded.remaining_textbox = window.preloaded.displays[2];
+	window.preloaded.collapse_textbox = window.preloaded.displays[3];
+
 	//Items for Dynamic CSS Alterations
 	window.preloaded.act_input_data = window.preloaded.input_data[0];
 	window.preloaded.ina_input_data = window.preloaded.input_data[1];

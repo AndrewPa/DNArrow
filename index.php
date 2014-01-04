@@ -175,7 +175,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 					</button>
 				</div>
 				<div class="input-data">
-					<select class="listbox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('act'));"></select>
+					<select class="listbox displaybox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('act'));"></select>
 					<input id="act_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
 					onkeypress="if(event.keyCode==13)(submitCoordinates('act'));">
 				</div>
@@ -188,7 +188,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 					</button>
 				</div>
 				<div class="input-data">
-					<select class="listbox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('ina'));"></select>
+					<select class="listbox displaybox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('ina'));"></select>
 					<input id="ina_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
 					onkeypress="if(event.keyCode==13)(submitCoordinates('ina'));">
 				</div>
@@ -201,7 +201,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 					</button>
 				</div>
 				<div class="input-data">
-					<textarea id="remaining_textbox"></textarea>
+					<textarea class="displaybox" id="remaining_textbox"></textarea>
 					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.computeRemaining();" role="button" aria-disabled="false" title="Run Algorithm">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
 					</button>
@@ -215,7 +215,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 					</button>
 				</div>
 				<div class="input-data results">
-					<textarea id="collapse_textbox"></textarea>
+					<textarea class="displaybox" id="collapse_textbox"></textarea>
 					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.collapseCoords();" role="button" aria-disabled="false" title="Run Algorithm">
 	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
 					</button>
