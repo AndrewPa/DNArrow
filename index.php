@@ -161,7 +161,7 @@ $JSON_data = JSON_encode($pre_JSON_data);
 				<div class="choose-box sup-enh-toggle" onclick="radioSelector('e_s_panel','sup_toggle')">
 					<span class="choose-box-label sup-enh-toggle-label">S</span>
 				</div>
-				<button class="ui-button ui-state-default ui-button-icon-only single load" onclick="window.alert('Not yet implemented!');" role="button" aria-disabled="false" title="Load Data">
+				<button class="ui-button ui-state-default ui-button-icon-only single load" onclick="showDatabaseOptions();" role="button" aria-disabled="false" title="Load Data">
 					<span class="ui-button-icon-primary ui-icon ui-icon-plusthick"></span>
 				</button>
 			</h4>
@@ -223,7 +223,8 @@ $JSON_data = JSON_encode($pre_JSON_data);
 			</div>
 		</div>
 		<div id="det_ins" title="Detailed Instructions"></div>
+		<div class="dialog-italic" id="database_options"></div>
 		<div id="warning_text" title="Notification"></div>
-		<div id="dialog-confirm"></div>
+		<div class="dialog-italic" id="dialog-confirm"></div>
 	</body>
 </html>

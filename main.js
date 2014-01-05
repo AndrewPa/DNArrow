@@ -137,20 +137,39 @@ var splash = document.getElementById("loading_data");
 	splash.parentNode.removeChild(splash);
 	//Removes "loading" text after data is loaded and passed to JS
 
-//Appends result arrays to each chromosome arm's dataset
+//Renaming inactive coordinate set name, "x" (from database) to more consistent, clear name
 (function() {
-	var res_arrays = ["elm","col","rem"];
-
-	for (chro_arm in JSON_data) {
-		for (res_array in res_arrays) {
-			var cur_array = res_arrays[res_array];
-			JSON_data[chro_arm][cur_array] = [];
-		};
+	for (cur_arm in all_arms) {
+		JSON_data[all_arms[cur_arm]]["ina"] = JSON_data[all_arms[cur_arm]]["x"];
+		delete JSON_data[all_arms[cur_arm]]["x"];
 	}
 }());
 
-//Renaming inactive coordinate set name, "x" (from database) to more consistent, clear name
-for (cur_arm in all_arms) {
-	JSON_data[all_arms[cur_arm]]["ina"] = JSON_data[all_arms[cur_arm]]["x"];
-	delete JSON_data[all_arms[cur_arm]]["x"];
+function loadArmDB(arm) {
+	res_types = window.preloaded.input_types;
+
+	for (res_type in res_types) {
+		var JSON_path = JSON_data[arm][res_types[res_type]];
+		var DS_path = preloaded.dataset[arm][res_types[res_type]];
+		var full_res = JSON_data[arm][res_types[res_type]]["full"];
+
+		for (res in full_res) {
+			var res_string = full_res[res]["str_id"];
+			var passed_array = DS_path["passed"];
+
+			if (passed_array.indexOf(full_res[res].str_id) === -1) {
+				DS_path["full"].push(JSON_path["full"][res]);
+				DS_path["pre_rem"].push(JSON_path["pre_rem"][res]);
+				DS_path["pre_col"].push(JSON_path["pre_col"][res]);
+				passed_array.push(res_string);
+			}
+		}
+	}
+	buildListbox();
+}
+
+function loadAllDataDB() {
+	for (cur_arm in preloaded.dataset) {
+		loadArmDB(cur_arm);
+	}
 }

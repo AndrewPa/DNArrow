@@ -88,6 +88,35 @@ function showInstructions() {
 	});
 }
 
+
+function showDatabaseOptions() {
+	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+
+	$( "#database_options" ).text("Current database: Default");
+	$( "#database_options" ).dialog({
+		resizable: false,
+		height: 140,
+		width: 355,
+		modal: true,
+		title: "Load from Database",
+		closeText: null,
+		buttons: {
+			"All Results": function() {
+				$( this ).dialog( "close" );
+				loadAllDataDB();
+			},
+			"Current Arm": function() {
+				$( this ).dialog( "close" );
+				loadArmDB(cur_arm);
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	$(".ui-dialog-titlebar-close").removeAttr("title");
+}
+
 function displayWarning(message) {
 	$( "#warning_text" ).append("<p>" + message + "</p>");
 	$( "#warning_text" ).dialog({
@@ -182,7 +211,7 @@ function buildTextarea(display_index) {
 	for(var i = 0; i < working_array.length; i++) {
 		result_text += working_array[i] + "\n";
 	}
-	boxtype.value = result_text;
+	boxtype.value = result_text.trim();
 }
 
 function buildListbox(display_index) {

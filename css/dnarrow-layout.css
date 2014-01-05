@@ -190,10 +190,10 @@ textarea {
 		margin-top: 5px;
 	}
 }
-#dialog-confirm {
+.dialog-italic {
 	font-style: italic;
 	position: relative;
-	top: 5px;
+	top: 7px;
 }
 #fixed-dialog {
 	position: fixed;
