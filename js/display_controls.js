@@ -117,6 +117,28 @@ function showDatabaseOptions() {
 	$(".ui-dialog-titlebar-close").removeAttr("title");
 }
 
+function loginWarning() {
+	$( "#login_warning" ).text("Please log in to load from your database.");
+	$( "#login_warning" ).dialog({
+		resizable: false,
+		height: 140,
+		width: 355,
+		modal: true,
+		title: "DNArrow is in Offline Mode",
+		closeText: null,
+		buttons: {
+			"Log in Now": function() {
+				$( this ).dialog( "close" );
+				document.location.href = "index.php";
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	$(".ui-dialog-titlebar-close").removeAttr("title");
+}
+
 function displayWarning(message) {
 	$( "#warning_text" ).append("<p>" + message + "</p>");
 	$( "#warning_text" ).dialog({
