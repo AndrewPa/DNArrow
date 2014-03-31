@@ -24,7 +24,7 @@
           </div>";
 
 	$username = "dnarrowadmin";
-	$password = "walkersss";
+	$password = "";
 	$server = "localhost";
 	$database = "dnarrow";
 	$chro_arms = array("2L","2R","3L","3R");
