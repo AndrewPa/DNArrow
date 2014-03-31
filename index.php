@@ -1,5 +1,5 @@
 <?php
-	mysql_connect("localhost", "dnarrowadmin", "walkersss") or die(mysql_error());
+	mysql_connect("localhost", "dnarrowadmin", "") or die(mysql_error());
 	mysql_select_db("dnarrow_users") or die(mysql_error());
 
 	if(isset($_COOKIE['ID_my_site'])) {
