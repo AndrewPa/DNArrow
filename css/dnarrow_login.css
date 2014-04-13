@@ -24,6 +24,10 @@ form.in-block {
     font-size: 20px;
 }
 
+#login-button {
+    margin-top: 20px;
+}
+
 #login-messages {
     font-size: 16px;
     font-style: italic;

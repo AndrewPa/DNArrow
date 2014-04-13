@@ -38,7 +38,7 @@
                 <div class="input-title">Password:</div>
                 <input type="password" name="pass" maxlength="30">
             </div>
-            <input type="submit" name="submit" value="Login">
+            <input id="login-button" type="submit" name="submit" value="Log in">
         </form>
 
 <?php
