@@ -1,130 +1,118 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>DNArrow 2.1 (c) Andrew Papadopoli 2014</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<!--Third-Party Scripts-->
-		<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
-		<script type="text/javascript" src="js/jquery-ui-1.10.3.dialog.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.css" media="screen" />
-		<!--My Scripts-->
-		<link rel="stylesheet" type="text/css" href="css/dnarrow-layout.css" media="screen" />
-		<script type="text/javascript" src="js/main.js"></script>
-		<script type="text/javascript" src="js/input_data_controls.js"></script>
-		<script type="text/javascript" src="js/display_controls.js"></script>
-		<script type="text/javascript" src="js/all_algorithms.js"></script>
-	</head>
-	<body>
-		<div class="topbar">
-			<h2>DNArrow 2.1</h2>
-			<h5>(c) Andrew Papadopoli 2014</h5>
-			<h4>
-				<a class="ins-link" onclick="showInstructions();">See detailed instructions here.</a>
-			</h4>
-			<h4>
-				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_2L')">
-					<span class="choose-box-label arm-box-label">2L</span>
-				</div>
-				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_2R')">
-					<span class="choose-box-label arm-box-label">2R</span>
-				</div>
-				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_3L')">
-					<span class="choose-box-label arm-box-label">3L</span>
-				</div>
-				<div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_3R')">
-					<span class="choose-box-label arm-box-label">3R</span>
-				</div>
-			</h4>
-			<h4>
-				<div class="choose-box sup-enh-toggle" onclick="radioSelector('e_s_panel','enh_toggle')">
-					<span class="choose-box-label sup-enh-toggle-label">E</span>
-				</div>
-				<div class="choose-box sup-enh-toggle" onclick="radioSelector('e_s_panel','sup_toggle')">
-					<span class="choose-box-label sup-enh-toggle-label">S</span>
-				</div>
-				<button class="ui-button ui-state-default ui-button-icon-only single load" onclick="databaseOptions();" role="button" aria-disabled="false" title="Load Data">
-					<span class="ui-button-icon-primary ui-icon ui-icon-plusthick"></span>
-				</button>
-			</h4>
-		</div>
-		<div class="appspace">
-			<div id="sup_data_group" class="data-group">
-				<div class="title-bar">
-					<span id="active_title" class="title-bar-text">Active</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('act');" role="button" aria-disabled="false" title="Clear All">
-	    				<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
-					</button>
-				</div>
-				<div class="input-data">
-					<select class="listbox displaybox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('act'));"></select>
-					<input id="act_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
-					onkeypress="if(event.keyCode==13)(submitCoordinates('act'));">
-				</div>
-			</div>
-			<div id="neu_data_group" class="data-group">
-				<div class="title-bar">
-					<span class="title-bar-text">Inactive</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('ina');" role="button" aria-disabled="false" title="Clear All">
-    					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
-					</button>
-				</div>
-				<div class="input-data">
-					<select class="listbox displaybox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('ina'));"></select>
-					<input id="ina_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
-					onkeypress="if(event.keyCode==13)(submitCoordinates('ina'));">
-				</div>
-			</div>
-			<div id="rem_data_group" class="data-group">
-				<div class="title-bar">
-					<span class="title-bar-text">Remaining</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('rem');" role="button" aria-disabled="false" title="Clear All">
-    					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
-					</button>
-				</div>
-				<div class="input-data">
-					<textarea class="displaybox" id="remaining_textbox"></textarea>
-					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.computeRemaining();" role="button" aria-disabled="false" title="Run Algorithm">
-	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
-					</button>
-				</div>
-			</div>
-			<div id="col_data_group" class="data-group">
-				<div class="title-bar">
-					<span class="title-bar-text">Collapse</span>
-					<button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('col');" role="button" aria-disabled="false" title="Clear All">
-    					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
-					</button>
-				</div>
-				<div class="input-data results">
-					<textarea class="displaybox" id="collapse_textbox"></textarea>
-					<button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.collapseCoords();" role="button" aria-disabled="false" title="Run Algorithm">
-	    				<span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="dialog-italic" id="login_warning"></div>
-		<div id="det_ins" title="Detailed Instructions"></div>
-		<div class="dialog-italic" id="database_options"></div>
-		<div id="warning_text" title="Notification"></div>
-		<div class="dialog-italic" id="dialog-confirm"></div>
-	</body>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>DNArrow 2.1 (c) Andrew Papadopoli 2014</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Third-Party Scripts and Stylesheets -->
+        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.10.3.dialog.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.3.custom.css" media="screen" />
+        <!-- My Scripts and Stylesheets -->
+        <link rel="stylesheet" type="text/css" href="css/dnarrow_layout.css" media="screen" />
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/input_data_controls.js"></script>
+        <script type="text/javascript" src="js/display_controls.js"></script>
+        <script type="text/javascript" src="js/all_algorithms.js"></script>
+    </head>
+    <body>
+        <div class="topbar">
+            <h2>DNArrow 2.1</h2>
+            <h5>(c) Andrew Papadopoli 2014</h5>
+            <h4>
+                <a class="ins-link" onclick="showInstructions();">See detailed instructions here.</a>
+            </h4>
+            <div>
+                <div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_2L')">
+                    <span class="choose-box-label arm-box-label">2L</span>
+                </div>
+                <div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_2R')">
+                    <span class="choose-box-label arm-box-label">2R</span>
+                </div>
+                <div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_3L')">
+                    <span class="choose-box-label arm-box-label">3L</span>
+                </div>
+                <div class="choose-box arm-box" onclick="radioSelector('arm_panel','arm_box_3R')">
+                    <span class="choose-box-label arm-box-label">3R</span>
+                </div>
+            </div>
+            <div>
+                <div class="choose-box sup-enh-toggle" onclick="radioSelector('e_s_panel','enh_toggle')">
+                    <span class="choose-box-label sup-enh-toggle-label">E</span>
+                </div>
+                <div class="choose-box sup-enh-toggle" onclick="radioSelector('e_s_panel','sup_toggle')">
+                    <span class="choose-box-label sup-enh-toggle-label">S</span>
+                </div>
+                <button class="ui-button ui-state-default ui-button-icon-only single load" onclick="databaseOptions();" role="button" aria-disabled="false" title="Load Data">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-plusthick"></span>
+                </button>
+            </div>
+        </div>
+        <div class="appspace">
+            <div id="sup_data_group" class="data-group">
+                <div class="title-bar">
+                    <span id="active_title" class="title-bar-text">Active</span>
+                    <button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('act');" role="button" aria-disabled="false" title="Clear All">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+                    </button>
+                </div>
+                <div class="input-data">
+                    <select class="listbox displaybox" id="sup_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('act'));"></select>
+                    <input id="act_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
+                        onkeypress="if(event.keyCode==13)(submitCoordinates('act'));">
+                </div>
+            </div>
+            <div id="neu_data_group" class="data-group">
+                <div class="title-bar">
+                    <span class="title-bar-text">Inactive</span>
+                    <button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('ina');" role="button" aria-disabled="false" title="Clear All">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+                    </button>
+                </div>
+                <div class="input-data">
+                    <select class="listbox displaybox" id="neu_coordslist" size="10" onkeypress="if(event.keyCode==46)(deleteCoordinate('ina'));"></select>
+                    <input id="ina_input" type="text" placeholder="e.g.: 1000000--2000000;3000000--4000000" 
+                        onkeypress="if(event.keyCode==13)(submitCoordinates('ina'));">
+                </div>
+            </div>
+            <div id="rem_data_group" class="data-group">
+                <div class="title-bar">
+                    <span class="title-bar-text">Remaining</span>
+                    <button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('rem');" role="button" aria-disabled="false" title="Clear All">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+                    </button>
+                </div>
+                <div class="input-data">
+                    <textarea class="displaybox" id="remaining_textbox"></textarea>
+                    <button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.computeRemaining();" role="button" aria-disabled="false" title="Run Algorithm">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
+                    </button>
+                </div>
+            </div>
+            <div id="col_data_group" class="data-group">
+                <div class="title-bar">
+                    <span class="title-bar-text">Collapse</span>
+                    <button class="ui-button ui-state-default ui-button-icon-only single clear" onclick="confirmClear('col');" role="button" aria-disabled="false" title="Clear All">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+                    </button>
+                </div>
+                <div class="input-data results">
+                    <textarea class="displaybox" id="collapse_textbox"></textarea>
+                    <button class="ui-button ui-state-default ui-button-icon-only single play" onclick="AllAlgorithms.collapseCoords();" role="button" aria-disabled="false" title="Run Algorithm">
+                    <span class="ui-button-icon-primary ui-icon ui-icon-play"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="login-warning" class="dialog-italic"></div>
+        <div id="det-ins" title="Detailed Instructions"></div>
+        <div id="database-options" class="dialog-italic"></div>
+        <div id="warning-text" title="Notification"></div>
+        <div id="dialog-confirm" class="dialog-italic"></div>
+    </body>
 </html>
+
+<!-- If loaded in offline mode, database options button replaced by
+offline notification -->
 <script>
-	databaseOptions = loginWarning;
+    databaseOptions = loginWarning;
 </script>
-<style>
-	textarea {
-		resize: none;
-		width: 264px;
-		height: 219px;
-		display: block;
-		font: 10pt arial, sans-serif;
-	}
-	input {
-		width: 264px;
-		display: block;
-	}
-</style>

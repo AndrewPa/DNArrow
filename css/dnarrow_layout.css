@@ -28,7 +28,8 @@ body {
 }
 a.ins-link {
 	color: #ABA3FF;
-	cursor: default;
+	cursor: pointer;
+        font-size: 18px;
 }
 a.ins-link:hover {
 	text-decoration: underline;
@@ -40,7 +41,8 @@ a.ins-link:hover {
 	border-color: #A985C8;
 	background-color: #8D6AAA;
 	border-width: 2px;
-	cursor: default;
+	cursor: pointer;
+        margin: 0px 2px 15px 0px;
 }
 .choose-box:hover,.choose-box-active {
 	border-color: #8CAEE6;
@@ -52,11 +54,11 @@ a.ins-link:hover {
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
-	user-select: none;
 }
 .arm-box {
 	width: 40px;
 	height: 40px;
+        font-weight: bold;
 }
 .arm-box-label {
 	font-size: 25px;
@@ -194,14 +196,4 @@ textarea {
 	font-style: italic;
 	position: relative;
 	top: 7px;
-}
-#fixed-dialog {
-	position: fixed;
-	/* 
-	 * jQuery-UI work-around: Rest of CSS applied 
-	 * dynamically and directly to element after
-	 * modal dialog box initilization. It is located
-	 * in display_controls.js under function 
-	 * showInstructions().
-	 */
 }

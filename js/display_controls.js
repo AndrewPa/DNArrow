@@ -33,164 +33,193 @@ function radioSelector(panel_name,button_label,init) {
 
 //Results from displayed algorithms are simply displayed, so only the display textarea is cleared
 function fullDeleteClear(type) {
-	if(type === 'rem') {
-		preloaded.remaining_textbox.value = "";
-	}
-	else if(type === 'col') {
-		preloaded.collapse_textbox.value = "";
-	}
-	else if(type === 'sup' || type === 'enh' || type === 'ina') {
-		deleteAllInput(type);
-	}
+    if(type === 'rem') {
+        preloaded.remaining_textbox.value = "";
+    }
+    else if(type === 'col') {
+        preloaded.collapse_textbox.value = "";
+    }
+    else if(type === 'sup' || type === 'enh' || type === 'ina') {
+        deleteAllInput(type);
+    }
 }
 
 function showInstructions() {
-	$( "#det_ins" ).append(
-			"<p>" +
-				"Enter the active/inactive region coordinates into their respective input forms. " +
-				"These can be typed in manually one at a time, or many at once, with each " +
-				"region separated by a single space. These can also be added by copying (sorted) " +
-				"columns from an excel file and pasting the results into their respective input boxes." +
-			"</p>" +
-			"<p>The format should be as follows:</p>" +
-			"<p>[A1];[A2] [B1];[B2]</p>" +
-			"<p>e.g.: 100;200 200;300 300;400 etc.</p>" +
-			"<p>" +
-				"Please ensure that left and right bounds are separated by a semicolon (;) " +
-				"and that only <em>spaces</em> separate each region. When ready to submit, " +
-				"press enter on your keyboard. You may <strong>delete</strong> any single coordinate from either " +
-				"of the two input boxes by selecting them and pressing the delete key on your keyboard." +
-			"</p>"
-	);
-	$( "#det_ins" ).dialog({
-		modal: true,
-		resizable: false,
-		draggable: false,
-		closeText: null,
-		close: function() {
-			$( "#det_ins" ).empty();
-		},
-	});
-	/*
-	 * Developer note:
-	 * What follows is a work-around for jQuery-UI's limited dialog positioning 
-	 * API: the dialog only calculates its centered position upon initialization
-	 * and thus must be moved by the user upon a window resize. With this fix,
-	 * the dialog maintains a fixed position in the exact center of the browser
-	 * window at all times, even upon resizing and scrolling.
-	 */
-	$( "#det_ins" ).dialog('widget').attr("id", "fixed-dialog");
-	$( "#fixed-dialog" ).css({
-		"top":"50%",
-		"margin-top":"-259px",
-		"left":"50%",
-		"margin-left":"-150px"
-	});
+    $( "#det-ins" ).append(
+        "<p>" +
+            "Enter the active/inactive region coordinates into their respective input forms. " +
+            "These can be typed in manually one at a time, or many at once, with each " +
+            "region separated by a single space. These can also be added by copying (sorted) " +
+            "columns from an excel file and pasting the results into their respective input boxes." +
+        "</p>" +
+        "<p>The format should be as follows:</p>" +
+        "<p>[A1];[A2] [B1];[B2]</p>" +
+        "<p>e.g.: 100;200 200;300 300;400 etc.</p>" +
+        "<p>" +
+            "Please ensure that left and right bounds are separated by a semicolon (;) " +
+            "and that only <em>spaces</em> separate each region. When ready to submit, " +
+            "press enter on your keyboard. You may <strong>delete</strong> any single coordinate from either " +
+            "of the two input boxes by selecting them and pressing the delete key on your keyboard." +
+        "</p>"
+    );
+    $( "#det-ins" ).dialog({
+        modal: true,
+        resizable: false,
+        draggable: false,
+        closeText: null,
+        close: function() {
+            $( "#det-ins" ).empty();
+        }
+    });
+    /*
+     * Developer note:
+     * What follows is a work-around for jQuery-UI's limited dialog positioning 
+     * API: the dialog only calculates its centered position upon initialization
+     * and thus must be moved by the user upon a window resize. With this fix,
+     * the dialog maintains a fixed position in the exact center of the browser
+     * window at all times, even upon resizing and scrolling.
+     */
+    $( "#det-ins" ).dialog('widget').attr("id", "fixed-det-ins");
+    $( "#fixed-det-ins" ).css({
+        "top":"50%",
+        "margin-top":"-259px",
+        "left":"50%",
+        "margin-left":"-150px",
+        "position":"fixed"
+    });
 }
 
 
 function showDatabaseOptions() {
-	var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
+    var cur_arm = button_states.arm_panel.prev_label.substr(8,9);
 
-	$( "#database_options" ).text("Current database: Default");
-	$( "#database_options" ).dialog({
-		resizable: false,
-		height: 140,
-		width: 355,
-		modal: true,
-		title: "Load from Database",
-		closeText: null,
-		buttons: {
-			"All Results": function() {
-				$( this ).dialog( "close" );
-				loadAllDataDB();
-			},
-			"Current Arm": function() {
-				$( this ).dialog( "close" );
-				loadArmDB(cur_arm);
-			},
-			Cancel: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	});
-	$(".ui-dialog-titlebar-close").removeAttr("title");
+    $( "#database-options" ).text("Current database: Default");
+    $( "#database-options" ).dialog({
+        resizable: false,
+        draggable: false,
+        height: 140,
+        width: 355,
+        modal: true,
+        title: "Load from Database",
+        closeText: null,
+        buttons: {
+            "All Results": function() {
+                $( this ).dialog( "close" );
+                loadAllDataDB();
+            },
+            "Current Arm": function() {
+                $( this ).dialog( "close" );
+                loadArmDB(cur_arm);
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+    $(".ui-dialog-titlebar-close").removeAttr("title");
+    $("#database-options").dialog('widget').attr("id", "fixed-db-options");
+    $( "#fixed-db-options" ).css({
+        "top":"50%",
+        "margin-top":"-70px",
+        "left":"50%",
+        "margin-left":"-178px",
+        "position":"fixed"
+    });
 }
 
 function loginWarning() {
-	$( "#login_warning" ).text("Please log in to load from your database.");
-	$( "#login_warning" ).dialog({
-		resizable: false,
-		height: 140,
-		width: 355,
-		modal: true,
-		title: "DNArrow is in Offline Mode",
-		closeText: null,
-		buttons: {
-			"Log in Now": function() {
-				$( this ).dialog( "close" );
-				document.location.href = "index.php";
-			},
-			Cancel: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	});
-	$(".ui-dialog-titlebar-close").removeAttr("title");
+    $( "#login-warning" ).text("Please log in to load from your database.");
+    $( "#login-warning" ).dialog({
+        resizable: false,
+        draggable: false,
+        height: 140,
+        width: 355,
+        modal: true,
+        title: "DNArrow is in Offline Mode",
+        closeText: null,
+        buttons: {
+            "Log in Now": function() {
+                $( this ).dialog( "close" );
+                document.location.href = "index.php";
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+    $(".ui-dialog-titlebar-close").removeAttr("title");
+    $( "#login-warning" ).dialog('widget').attr("id", "fixed-login-warning");
+    $( "#fixed-login-warning" ).css({
+        "top":"50%",
+        "margin-top":"-70px",
+        "left":"50%",
+        "margin-left":"-178px",
+        "position":"fixed"
+    });
 }
 
 function displayWarning(message) {
-	$( "#warning_text" ).append("<p>" + message + "</p>");
-	$( "#warning_text" ).dialog({
-	modal: true,
-	resizable: false,
-	draggable: false,
-	closeText: null,
-	width: 300,
-	close: function() {
-		$( "#warning_text" ).empty();
-		},
-	});
-	$( "#warning_text" ).dialog('widget').attr("id", "fixed-dialog");
-	$( "#fixed-dialog" ).css({
-		"top":"50%",
-		"margin-top":"-108px", //Auto height for current font and width is 216px
-		"left":"50%",
-		"margin-left":"-150px"
-	});
+    $( "#warning-text" ).append("<p>" + message + "</p>");
+    $( "#warning-text" ).dialog({
+        modal: true,
+        resizable: false,
+        draggable: false,
+        closeText: null,
+        width: 300,
+        close: function() {
+            $( "#warning-text" ).empty();
+        }
+    });
+    $( "#warning-text" ).dialog('widget').attr("id", "fixed-warning-text");
+    $( "#fixed-warning-text" ).css({
+        "top":"50%",
+        "margin-top":"-108px", //Auto height for current font and width is 216px
+        "left":"50%",
+        "margin-left":"-150px",
+        "position":"fixed"
+    });
 }
 
 function confirmClear(type) {
-	if (type === "act") {
-		var type = button_states.e_s_panel.prev_label.substr(0,3);
-	}
+    if (type === "act") {
+        var type = button_states.e_s_panel.prev_label.substr(0,3);
+    }
 
-	messages = {
-		sup: "suppressor region coordinates?",
-		enh: "enhancer region coordinates?",
-		ina: "inactive region coordinates?",
-		rem: "results from Remaining?",
-		col: "results from Collapse?"
-	};
+    messages = {
+        sup: "suppressor region coordinates?",
+        enh: "enhancer region coordinates?",
+        ina: "inactive region coordinates?",
+        rem: "results from Remaining?",
+        col: "results from Collapse?"
+    };
 
-	$( "#dialog-confirm" ).text("Clear all " + messages[type]);
-	$( "#dialog-confirm" ).dialog({
-		resizable: false,
-		height: 140,
-		modal: true,
-		title: "Confirm Input Removal",
-		closeText: null,
-		buttons: {
-			"Clear All": function() {
-				$( this ).dialog( "close" );
-				fullDeleteClear(type);
-			},
-			Cancel: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	});
-	$(".ui-dialog-titlebar-close").removeAttr("title");
+    $( "#dialog-confirm" ).text("Clear all " + messages[type]);
+    $( "#dialog-confirm" ).dialog({
+        resizable: false,
+        draggable: false,
+        height: 140,
+        modal: true,
+        title: "Confirm Input Removal",
+        closeText: null,
+        buttons: {
+            "Clear All": function() {
+                $( this ).dialog( "close" );
+                fullDeleteClear(type);
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+    $( ".ui-dialog-titlebar-close" ).removeAttr("title");
+    $( "#dialog-confirm" ).dialog('widget').attr("id", "fixed-dialog-confirm");
+    $( "#fixed-dialog-confirm" ).css({
+        "top":"50%",
+        "margin-top":"-70px",
+        "left":"50%",
+        "margin-left":"-151px",
+        "position":"fixed"
+    });
 }
 
 function buildSelect(display_index) {

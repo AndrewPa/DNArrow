@@ -1,4 +1,6 @@
-function fullSort(a) {	//modified sort function sorts numerically (ascending) by first endpoint then second endpoint
+//Modified sort function that sorts numerically (ascending) by the first
+//endpoint, then the second endpoint, of each coordinate pair
+function fullSort(a) {
 	a.sort(function(a, b) {
 		if(a.split(";")[0] - b.split(";")[0] !== 0) { 
 			return a.split(";")[0] - b.split(";")[0]; 
@@ -10,7 +12,7 @@ function fullSort(a) {	//modified sort function sorts numerically (ascending) by
 	return a;
 }
 
-//single-instance class containing all coordinate handling code
+//Single-instance class containing all coordinate handling code
 var AllAlgorithms = new (function() {
 	this.eliminateOverlaps = function (chrom_length, tested_regions) {
 		//Removes inactive regions from active ones; output becomes input of Hotspots and Collapse.

@@ -1,103 +1,113 @@
 <?php
-	mysql_connect("localhost", "dnarrowadmin", "") or die(mysql_error());
-	mysql_select_db("dnarrow_users") or die(mysql_error());
+    session_start();
+    ob_start();
 
-	if(isset($_COOKIE['ID_my_site'])) {
-		$username = $_COOKIE['ID_my_site']; 
-		$pass = $_COOKIE['Key_my_site'];
-		$check = mysql_query("SELECT * FROM registered_users WHERE username = '$username'")or die(mysql_error());
-
-		while($info = mysql_fetch_array( $check )) {
-			if ($pass != $info['password']) {
-			}
-	 		else {
-				header("Location: dnarrow.php");
-			}
-		}
-	}
-	else {
+    if(isset($_SESSION['valid']) && $_SESSION['valid']) {
+        header("Location: dnarrow.php");
+        die();
+    }
+    else {
+        if(isset($_POST['submit'])) {
+            $check_sbm = true;
+        }
+        else {
+            $check_sbm = false;
+        }
 ?>
 
-<style>
-html {
-	font: 10pt arial, sans-serif;
-	color: #FFFFFF;
-}
-body {
-	background-color: #A985C8;
-	min-width: 350px;
-	text-align: center;
-}
-form { 
-	margin: 0 auto; 
-	width:250px;
-}
-form.in-block {
-	margin-top: 10px;
-}
-</style>
-<div>
-	<h2>DNArrow 2.1</h2>
-	<h5>(c) Andrew Papadopoli 2014</h5>
-	<h4>
-		Please log in to your database account
-		<br><em>or</em> start in <a href="dnarrow.html">Offline Mode</a> (manual entry only).
-	</h4>
-</div>
-<form class="in-block" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-	<table border="0">
-		<tr>
-			<td>Username:</td><td>
-			<input type="text" name="username" maxlength="40">
-			</td>
-		</tr>
-		<tr>
-			<td>Password:</td><td> 
-			<input type="password" name="pass" maxlength="50"> 
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right"> 
-			<input type="submit" name="submit" value="Login"></td>
-		</tr>
-	</table>
-</form>
-<?php 
-	}
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/dnarrow_login.css" media="screen" />
+    </head>
+    <body>
+        <div>
+            <h2>DNArrow 2.1</h2>
+            <h5>(c) Andrew Papadopoli 2014</h5>
+            <h4>
+            	Please log in to your database account
+            	<br><em>or</em> start in <a href="dnarrow.html">Offline Mode</a>
+                (manual entry only).
+            </h4>
+        </div>
+        <form class="in-block" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+            <div class="input-area">
+                <div class="input-title">Username:</div>
+                <input type="text" name="username" maxlength="30">
+            </div>
+            <div class="input-form">
+                <div class="input-title">Password:</div>
+                <input type="password" name="pass" maxlength="30">
+            </div>
+            <input type="submit" name="submit" value="Login">
+        </form>
 
-	if (isset($_POST['submit'])) {
-		if(!$_POST['username']) {
-			die('Please enter your username.');
-		}
-		if(!$_POST['pass']) {
-			die('Please enter your password.');
-		}
-		if (!get_magic_quotes_gpc()) {
-			$_POST['email'] = addslashes($_POST['email']);
-		}
+<?php
+    }
 
-		$check = mysql_query("SELECT * FROM registered_users WHERE username = '".$_POST['username']."'")or die(mysql_error());
-		$check2 = mysql_num_rows($check);
+    if($check_sbm) {
+        $usr = $_POST['username'];
+        $pwd = $_POST['pass'];
 
-		if ($check2 == 0) {
-			die('Sorry, user <strong>'.$_POST['username'].'</strong> does not exist.');
-		}
+        $check_usr = !!$usr;
+        $check_pwd = !!$pwd;
 
-		while($info = mysql_fetch_array( $check )) {
-			$_POST['pass'] = stripslashes($_POST['pass']);
-			$info['password'] = stripslashes($info['password']);
-			$_POST['pass'] = md5($_POST['pass']);
-	
-			if ($_POST['pass'] != $info['password']) {
-				die('Incorrect password.');
-			}
-			else {
-				$_POST['username'] = stripslashes($_POST['username']);
-				$hour = time() + 3600;
-				setcookie(ID_my_site, $_POST['username'], $hour);
-				setcookie(Key_my_site, $_POST['pass'], $hour);
-				header("Location: dnarrow.php");
-			}
-		}
-	}
+        $check_urf = false; //Initializing other check variables
+        $check_cpd = false;
+
+        if($check_usr && $check_pwd) {
+            include "private/credentials.php";
+
+            $db = new PDO('mysql:host=localhost;dbname=dnarrowx_users;charset=utf8',
+                $credentials["login"]["id"], $credentials["login"]["pass"]);
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+            try {
+                $stmt = $db->prepare("SELECT * FROM registered_users " .
+                        "WHERE username = ?");
+                $stmt->execute(array($usr));
+            }
+            catch(PDOException $ex) {
+                echo "There was a problem accessing the user database: " .
+                    $ex->getMessage();
+            }
+            $check_urf = ($stmt->rowCount() > 0 ? true : false);
+        }
+
+        if ($check_urf) {
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if ($row['password'] == hash('sha256', $pwd)) {
+                    session_regenerate_id();
+                    $_SESSION['valid'] = 1;
+                    $_SESSION['userid'] = $usr;
+                    header("Location: dnarrow.php");
+                    die();
+                }
+                else {
+                    $check_cpd = false;
+                }
+            }
+        }
+    }
 ?>
+
+    <div id="login-messages">
+
+<?php
+        if(!$check_sbm) {
+            //Form not yet submitted, proceed to next check
+        } elseif (!$check_usr) {
+            echo 'Please enter your username.';
+        } elseif (!$check_pwd) {
+            echo 'Please enter your password.';
+        } elseif (!$check_urf) {
+            echo 'Sorry, user <strong>' . $usr .
+                '</strong> does not exist.';
+        } elseif (!$check_cpd) {
+            echo 'Incorrect password for user <strong>' . $usr . '</strong>.';
+        }
+?>
+
+        </div>
+    </body>
+</html>

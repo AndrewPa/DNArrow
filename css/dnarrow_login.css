@@ -1,0 +1,30 @@
+html {
+    font-family: arial;
+    font-size: 16px;
+    color: #FFFFFF;
+}
+body {
+    background-color: #A985C8;
+    min-width: 350px;
+    text-align: center;
+}
+form { 
+    margin: 0 auto; 
+    width:250px;
+}
+form.in-block {
+    margin-bottom: 20px;
+}
+
+.input-area {
+    margin: 20px;
+}
+
+.input-title {
+    font-size: 20px;
+}
+
+#login-messages {
+    font-size: 16px;
+    font-style: italic;
+}
