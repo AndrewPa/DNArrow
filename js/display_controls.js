@@ -201,7 +201,7 @@ function buildTextarea(display_index) {
 
 function buildListbox(display_index) {
     // With no arguments, this function displays data in all display boxes
-    if (arguments[0] === undefined) {
+    if (display_index === undefined) {
         var build_all = true;
         display_index = 0;
     }
@@ -209,22 +209,22 @@ function buildListbox(display_index) {
     switch (display_index) {
         case 0: // Active inputs
             buildSelect(0);
-            if (build_all === undefined) {
+            if (!build_all) {
                 break;
             }
         case 1: // Inactive inputs
             buildSelect(1);
-            if (build_all === undefined) {
+            if (!build_all) {
                 break;
             }
         case 2: // Remaining results
             buildTextarea(2);
-            if (build_all === undefined) {
+            if (!build_all) {
                 break;
             }
         case 3: // Collapse results
             buildTextarea(3);
-            if (build_all === undefined) {
+            if (!build_all) {
                 break;
             }
         default:

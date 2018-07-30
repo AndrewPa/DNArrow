@@ -27,8 +27,7 @@ function parseVerifyCoord(targ_coord, cur_arm) {
     if (!targ_coord.match(re_bcor)) {
         displayWarning(
             '<p>One of your entries is invalid (' + targ_coord + ').</p>' +
-            '<p>Please ensure that each coordinate is in the correct format.</p>' +
-            format_alert
+            '<p>Please ensure that each coordinate is in the correct format.</p>'
         );
 
         return false;
@@ -52,8 +51,7 @@ function parseVerifyCoord(targ_coord, cur_arm) {
         if (Number(lft_most) > Number(lft)) {
             displayWarning(
                 '<p>One of your entries is invalid (' + targ_coord + ').</p>' +
-                '<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>' +
-                format_alert
+                '<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>'
             );
 
             return false;
@@ -61,8 +59,7 @@ function parseVerifyCoord(targ_coord, cur_arm) {
         if (Number(lft_most) === Number(lft)) {
             displayWarning(
                 '<p>One of your entries is invalid (' + targ_coord + ').</p>' +
-                '<p>You cannot define a left breakpoint region of zero length.</p>' +
-                format_alert
+                '<p>You cannot define a left breakpoint region of zero length.</p>'
             );
 
             return false;
@@ -78,8 +75,7 @@ function parseVerifyCoord(targ_coord, cur_arm) {
         if (Number(rgt) > Number(rgt_most)) {
             displayWarning(
                 '<p>One of your entries is invalid (' + targ_coord + ').</p>' +
-                '<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>' +
-                format_alert
+                '<p>Uncertain breakpoints must be typed left to right (lowest position to highest position).</p>'
             );
 
             return false;
@@ -87,8 +83,7 @@ function parseVerifyCoord(targ_coord, cur_arm) {
         if (Number(rgt) === Number(rgt_most)) {
             displayWarning(
                 '<p>One of your entries is invalid (' + targ_coord + ').</p>' +
-                '<p>You cannot define a right breakpoint region of zero length.</p>' +
-                format_alert
+                '<p>You cannot define a right breakpoint region of zero length.</p>'
             );
 
             return false;
@@ -101,8 +96,7 @@ function parseVerifyCoord(targ_coord, cur_arm) {
     if (Number(lft) > Number(rgt)) {
         displayWarning(
             '<p>One of your entries is invalid (' + targ_coord + ').</p>' +
-            '<p>Coordinates must be typed left to right (lowest position to highest position).</p>' +
-            format_alert
+            '<p>Coordinates must be typed left to right (lowest position to highest position).</p>'
         );
 
         return false;
@@ -110,8 +104,7 @@ function parseVerifyCoord(targ_coord, cur_arm) {
     if (lft === rgt) {
         displayWarning(
             '<p>One of your entries is invalid (' + targ_coord + ').</p>' +
-            '<p>You cannot define a region of zero length.</p>' +
-            format_alert
+            '<p>You cannot define a region of zero length.</p>'
         );
 
         return false;
@@ -131,7 +124,7 @@ function getInterval(coord, interval) {
 
     if (interval === 'largest') {
         if (coord.lft_most !== 0) {
-            left = coordlft_most;
+            left = coord.lft_most;
         }
         else {
             left = coord.lft;
